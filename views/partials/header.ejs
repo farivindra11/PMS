@@ -5,47 +5,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projects </title>
-    <link rel="icon" href="https://cdn.pixabay.com/photo/2017/01/31/23/42/animal-2028258_960_720.png" sizes="16x16" type="image/png">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="icon" href="https://cdn.pixabay.com/photo/2017/01/31/23/42/animal-2028258_960_720.png" sizes="16x16"
+        type="image/png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Viga&display=swap" rel="stylesheet">
 
     <style>
+        /* nav */
+        .fixed-top {
+            padding: inherit;
+        }
+        .navbar-brand {
+            margin-left: 40px;
+        }
+        .navbar-text {
+            margin-right: 20px;
+        }
+        /* endNav */
         a {
             font-family: viga;
         }
-        .containers{
+
+        .containers {
             margin-top: 70px;
             font-family: viga;
         }
+
+        .contable {
+            margin-top: 30px;
+        }
+
         .col-md-12 {
             padding-left: 40px;
-            padding-right:40px;
-        }    </style>
+            padding-right: 40px;
+        }
+        .col {
+            margin-left: 160px;
+            margin-top: -40px;
+        }
+        .apply {
+            margin-top: 15px;
+            margin-left: 25px;
+        }
+        .card2 {
+            border-radius: 20px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .card-body.tb {
+            padding: 40px;
+            box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            background: #fff;
+        }
+        .table th {
+            font-size: 17px;
+        }
+        .table td {
+          font-family: Arial, Helvetica, sans-serif;
+
+        }
+    </style>
 </head>
+
 <body id="page-top">
-    <div class="navbar">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-       
-        <a class="navbar-brand" href="#">Project Management System</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarText">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="/projects">Projects <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Profile</a>
-            </li>
-          </ul>
-          <span class="navbar-text">
-              <a href="/logout">
-            <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Log out</button>
-        </a>
-          </span>
-        </div>
-  
-      </nav>
-    </div>
+    <!-- <div class="navbar"> -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+
+            <a class="navbar-brand" href="#">Project Management System</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/projects">Projects <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Profile</a>
+                    </li>
+                </ul>
+                <span class="navbar-text">
+                    <a href="/logout">
+                        <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Log out</button>
+                    </a>
+                </span>
+            </div>
+
+        </nav>
+    <!-- </div> -->
     <div class="containers">

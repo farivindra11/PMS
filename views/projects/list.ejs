@@ -1,53 +1,98 @@
 <%- include('../partials/header')%>
-<div class="container">
+<%- include('./filter')%>
 
-    <h1 class="card-title">Projects</h1>
-    <hr>
-    <h3 class="card-title">Filters</h3>
-    <div class="col-md-12">
-    <form action="" method="get">
-        <div class="form-group row">
-            <label for="id" class="col-sm-2 col-form-label">
-                <input class="form-check-input" name="checkId" type="checkbox" id="id">
-                ID
-            </label>
-            <div class="col-sm-10">
-                <input type="number" name="id" class="form-control" id="id" placeholder="ID">
+<div class="container contable">
+    <h3 class="card-title">Options</h3>
+    <div class="col-sm-2">
+        <p>Columns</p>
+        <div class="col">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="oid">
+                <label class="form-check-label" for="oid">
+                    ID
+                </label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="oname">
+                <label class="form-check-label" for="oname">
+                    Name
+                </label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="omembers">
+                <label class="form-check-label" for="omembers">
+                    Members
+                </label>
             </div>
         </div>
-
-        <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">
-                <input class="form-check-input" name="checkName" type="checkbox" id="name">
-                Name
-            </label>
-            <div class="col-sm-10">
-                <input type="text" name="name" class="form-control" id="name" placeholder="Name">
-            </div>
+        <div class="apply">
+            <button class="btn btn-primary">Apply</button>
         </div>
-
-        <div class="form-group row">
-            <label for="member" class="col-sm-2 col-form-label">
-                <input class="form-check-input" name="checkMember" type="checkbox" id="member">
-                Member
-            </label>
-            <div class="col-sm-10">
-                <input type="text" name="member" class="form-control" id="member" placeholder="Member">
-            </div>
+    </div>
+    <!-- table -->
+    <div class="card2">
+        <div class="card-body tb">
+            <form action="" method="GET">
+                <div class="table">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Project id</th>
+                                <th scope="col">Project Name</th>
+                                <th scope="col">Porject Members</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tr>
+                            <td>asddas</td>
+                            <td>sasa</td>
+                            <td>sasa</td>
+                            <td>
+                                <a href="#">
+                                    <button type="button" class="btn btn-success">Edit</button>
+                                  </a>
+                                  <a href="#">
+                                    <button type="button" class="btn btn-danger"
+                                      onclick="javascript: return confirm('Yakin data akan dihapus?')">Delete</button>
+                                  </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>asddas</td>
+                            <td>sasa</td>
+                            <td>sasa</td>
+                            <td><a href="#">
+                                <button type="button" class="btn btn-success">Edit</button>
+                              </a>
+                              <a href="#">
+                                <button type="button" class="btn btn-danger"
+                                  onclick="javascript: return confirm('Yakin data akan dihapus?')">Delete</button>
+                              </a></td>
+                        </tr>
+                        <tr>
+                            <td>asddas</td>
+                            <td>sasa</td>
+                            <td>sasa</td>
+                            <td><a href="#">
+                                <button type="button" class="btn btn-success">Edit</button>
+                              </a>
+                              <a href="#">
+                                <button type="button" class="btn btn-danger"
+                                  onclick="javascript: return confirm('Yakin data akan dihapus?')">Delete</button>
+                              </a></td>
+                        </tr>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="add">
+                    <a class="btn btn-primary" href="/add">Add</a>
+                  </div>
+            </form>
         </div>
-    </form>
-
-    <div class="form-group row">
-        <div class="col-sm-10">
-          <button type="submit" class="btn btn-dark" value="clicked">Search</button>
-
-          <a href="/">
-            <button type="submit" class="btn btn-dark">reset</button>
-          </a>
-          
-        </div>
-      </div>
-</div>
+    </div>
 </div>
 
 <%- include('../partials/footer')%>
