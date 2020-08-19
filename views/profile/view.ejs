@@ -2,50 +2,93 @@
 <div class="container">
     <h1 class="card-title">Profile</h1>
     <hr>
-    <div class="col-md-12">
-    <form action="" method="get">
-        <div class="form-group row">
-            <label for="checkEmail" class="col-sm-2 col-form-label">
-                <input class="form-check-input" name="checkEmail" type="checkbox" id="email">
-                Email
-            </label>
-            <div class="col-sm-10">
-                <input type="text" name="email" class="form-control" id="email" placeholder="Email">
+    <div class="col-md-12 b">
+        <form action="" method="POST">
+            <div class="form-group row">
+                <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+                <div class="col-sm-10">
+                    <input type="email" name="email" class="form-control" id="inputEmail" placeholder="">
+                </div>
             </div>
-        </div>
 
-        <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">
-                <input class="form-check-input" name="checkName" type="checkbox" id="name">
-                Pasword
-            </label>
-            <div class="col-sm-10">
-                <input type="text" name="name" class="form-control" id="name" placeholder="Name">
+            <div class="form-group row">
+                <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+                <div class="col-sm-10">
+                    <input type="password" name="password" class="form-control" id="inputPassword" placeholder="">
+                </div>
             </div>
-        </div>
 
-        <div class="form-group row">
-            <label for="member" class="col-sm-2 col-form-label">
-                <input class="form-check-input" name="checkMember" type="checkbox" id="member">
-                Member
-            </label>
-            <div class="col-sm-10">
-                <input type="text" name="member" class="form-control" id="member" placeholder="Member">
+            <div class="form-group row">
+                <label for="inputFirstname" class="col-sm-2 col-form-label">First Name</label>
+                <div class="col-sm-10">
+                    <input type="text" name="firstName" class="form-control" id="inputFirstname" placeholder="">
+                </div>
             </div>
-        </div>
-    </form>
 
-    <div class="form-group row">
-        <div class="col-sm-10">
-          <button type="submit" class="btn btn-dark" value="clicked">Search</button>
+            <div class="form-group row">
+                <label for="inputLastname" class="col-sm-2 col-form-label">Last Name</label>
+                <div class="col-sm-10">
+                    <input type="text" name="lastname" class="form-control" id="inputLastname" placeholder="">
+                </div>
+            </div>
 
-          <a href="/">
-            <button type="submit" class="btn btn-dark">reset</button>
-          </a>
-          
-        </div>
-      </div>
-</div>
+            <div class="row">
+                <legend class="col-form-label col-sm-2 pt-0">Position</legend>
+                <div class="col-sm-10">
+                    <div class="form-check">
+                        <input id="manager" type="radio" name="position" class="form-check-input" value="Manager">
+                        <label for="manager" class="form-check-label">
+                            Manager
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input id="softwareDeveloper" type="radio" name="position" class="form-check-input"
+                            value="Software Developer">
+                        <label for="softwareDeveloper" class="form-check-label">
+                            Software Developer
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input id="qualityAssurance" type="radio" name="position" class="form-check-input"
+                            value="Quality Assurance">
+                        <label for="qualityAssurance" class="form-check-label">
+                            Quality Assurance
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row b">
+                <legend class="col-form-label col-sm-2 pt-0">Type Job</legend>
+                <div class="col-sm-10">
+                    <div class="form-check">
+                        <input id="fullTime" type="checkbox" name="position" class="form-check-input" value="Full Time ">
+                        <label for="fullTime" class="form-check-label">
+                            Full Time 
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input id="partTime" type="checkbox" name="position" class="form-check-input"
+                            value="Part Time">
+                        <label for="partTime" class="form-check-label">
+                            Part Time
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary" value="clicked">Update</button>
+            </div>
+
+        </form>
+    </div>
 </div>
 
 <%- include('../partials/footer')%>
