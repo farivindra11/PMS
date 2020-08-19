@@ -9,28 +9,33 @@ module.exports = (db) => {
     res.render('login')
   });
 
-// login routes
+  // login routes
   router.post('/login', function (req, res, next) {
-    const {email, password} = req.body
+    const { email, password } = req.body
     db.query('SELECT * FROM users WHERE email = $1', [email], (err, data) => {
       if (err) return res.send('gagal')
 
       if (data.rows.length == 0) return res.send('email ga ketemu')
 
-      bcrypt.compare(password, data.rows[0].password, function(err, isValid) {
+      bcrypt.compare(password, data.rows[0].password, function (err, isValid) {
         // result == true
         if (err) return res.send('gagal')
 
-        if (isValid){ 
+        if (isValid) {
           req.session.user = data.rows[0]
           res.redirect('/projects')
         } else {
           res.send('pass salah')
         }
-    });
-       
+      });
+    })
+  });
 
-      
+// logout routes
+  router.get('/logout', function (req, res, next) {
+    req.session.destroy(function (err) {
+      if(err) return res.send(err)
+      res.redirect('/')
     })
   });
 
