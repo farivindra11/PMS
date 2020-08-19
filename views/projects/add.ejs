@@ -1,1 +1,51 @@
-berhaasilll
+<%- include('../partials/header')%>
+<div class="container">
+    <h1 class="card-title">Add Your New Project !</h1>
+    <hr>
+    <div class="col-md-12 b">
+        <form action="" method="POST">
+            <div class="form-group row">
+                <label for="projectName" class="col-sm-2 col-form-label">Project Name</label>
+                <div class="col-sm-10">
+                    <input type="text" name="projectname" class="form-control" id="projectName" placeholder="Project Name">
+                </div>
+            </div>
+
+            <div class="row b">
+                <legend class="col-form-label col-sm-2 pt-0">Members</legend>
+                <div class="col-sm-10">
+                    <div class="form-check">
+                        <input id="members1" type="checkbox" name="members" class="form-check-input" value="">
+                        <label for="members1" class="form-check-label">
+                            Fariv Indra 
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input id="members2" type="checkbox" name="members" class="form-check-input"
+                            value="">
+                        <label for="members2" class="form-check-label">
+                            Tok Dalang
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input id="members3" type="checkbox" name="members" class="form-check-input"
+                            value="">
+                        <label for="members3" class="form-check-label">
+                            Kak Ros
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-outline-primary" value="clicked">Save</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+<%- include('../partials/footer')%>

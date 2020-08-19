@@ -18,7 +18,12 @@ module.exports = (db) => {
 
     // add
   router.get('/add', helpers.isLoggedIn, function (req, res, next) {
-    res.render('projects/add', { user: req.session.user })
+    const link = 'projects';
+    const user = req.session.user
+    res.render('projects/add', {
+      link,
+      user
+      })
   });
 
   router.post('/add', helpers.isLoggedIn, function (req, res, next) {
