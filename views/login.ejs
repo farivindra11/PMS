@@ -36,6 +36,11 @@
       -ms-user-select: none;
       user-select: none;
     }
+    .alert-light{
+      /* background-color: rgba(0,0,0,0); */
+      font-family: Arial, Helvetica, sans-serif;
+      color: red;
+    }
 
     @media (min-width: 768px) {
       .bd-placeholder-img-lg {
@@ -54,6 +59,12 @@
       <img class="mb-4" src="/images/animal.svg" alt="" width="80" height="80">
       <h1 class="h3 mb-3 font-weight-normal" style="color: aliceblue;">Project Management <br> System</h1>
     </div>
+
+    <% if(loginInfo.length > 0) {%>
+    <div class="alert alert-light" role="alert">
+      <%= loginInfo %>
+    </div>
+    <% }%>
 
     <div class="form-label-group" style="color: white!important;">
       <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus=""
