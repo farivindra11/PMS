@@ -12,14 +12,15 @@ module.exports = (db) => {
   router.get('/', helpers.isLoggedIn, function (req, res, next) {
     const link = 'profile';
     const user = req.session.user
-    let sql = `SELECT * FROM user WHERE email = $1`
-    db.query(sql, [user.email], (err, data) => {
-      if(err) return res.send(err)
-
+    let sql = `SELECT * FROM users WHERE email = '${user.email}'`
+    db.query(sql, (err, data) => {
+      if (err) return res.send(err)
+      
       res.render('profile/view', {
         user,
         link,
         data: data.rows[0]
+        // login: req.session.user
       })
     })   
   });
