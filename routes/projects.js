@@ -32,7 +32,12 @@ module.exports = (db) => {
 
     // edit
   router.get('/edit/:id', helpers.isLoggedIn, function (req, res, next) {
-    res.render('projects/edit', { user: req.session.user })
+    const link = 'projects';
+    const user = req.session.user
+    res.render('projects/edit', {
+      link,
+      user
+    })
   });
 
   router.post('/edit/:id', helpers.isLoggedIn, function (req, res, next) {
