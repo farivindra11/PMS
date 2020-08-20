@@ -15,7 +15,6 @@ module.exports = (db) => {
     let sql = `SELECT * FROM users WHERE email = '${user.email}'`
     db.query(sql, (err, data) => {
       if (err) return res.send(err)
-      
       res.render('profile/view', {
         user,
         link,
