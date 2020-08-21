@@ -2,6 +2,13 @@ var express = require('express');
 var router = express.Router();
 var helpers = require('../helpers/util')
 
+
+let projectOptions = {
+  id : true,
+  name : true,
+  members : true
+}
+
 /* GET home page. */
 
 module.exports = (db) => {
@@ -10,6 +17,20 @@ module.exports = (db) => {
   router.get('/', helpers.isLoggedIn, function (req, res, next) {
     const link = 'projects';
     const user = req.session.user
+
+    let getData = `SELECT count(id) AS total FROM (SELECT DISTINCT projects.projectid AS id FROM projects
+      LEFT JOIN members ON members.projectid = projects.projectid
+      LEFT JOIN users ON users.userid = members.userid`
+
+    const {checkId, checkName, checkMember, projectId, projectName, member} = req.query;
+
+      let result = []
+
+    if(checkId && projectId) {
+      result.push(`projects.projectid=${projectId}`)
+    }
+
+      
     res.render('projects/list', {
       user,
       link
