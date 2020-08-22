@@ -1,12 +1,13 @@
 var express = require('express');
 var router = express.Router();
 var helpers = require('../helpers/util')
+var path = require('path')
 
 
 let projectOptions = {
   id: true,
   name: true,
-  members: true
+  member: true
 }
 
 /* GET home page. */
@@ -18,9 +19,9 @@ module.exports = (db) => {
     const link = 'projects';
     const user = req.session.user
 
-    let sql = `SELECT count(id) AS total FROM (SELECT DISTINCT projects.projectid as id FROM projects
+    let getData = `SELECT count(id) AS total from (SELECT DISTINCT projects.projectid as id FROM projects
       LEFT JOIN members ON members.projectid = projects.projectid
-      LEFT JOIN users ON users.userid = members.userid`
+      LEFT JOIN users ON users.userid = members.userid `
 
     const { checkId, checkName, checkMember, projectId, projectName, member } = req.query;
 
@@ -37,48 +38,56 @@ module.exports = (db) => {
     }
 
     if (query.length > 0) {
-      sql += `WHERE ${query.join('AND')}`
+      getData += ` WHERE ${query.join(" AND ")}`
     }
 
-    sql += `) AS projectname`;
-    //
+    getData += `) AS projectname`;
 
-    db.query(sql, (err, totalData) => {
+    // console.log(getData);
+
+    db.query(getData, (err, totalData) => {
+      // console.log(totalData);
       if (err) return res.status(500).json({
         error: true,
         massage: err
       })
+      //pgnation
       const url = req.url == '/' ? '/?page=1' : req.url
       const page = req.query.page || 1
       const limit = 3
       const offset = (page - 1) * limit
-      const tosal = totalData.rows[0].total
+      const total = totalData.rows[0].total
       const pages = Math.ceil(total / limit)
 
-      let sql = `SELECT DISTINCT projects.projectid, projects.name,
+      let getData = `SELECT DISTINCT projects.projectid, projects.name,
       string_agg(users.firstname || ' ' || users.lastname, ', ') as member FROM projects
       LEFT JOIN members ON members.projectid = projects.projectid
-      LEFT JOIN users ON users.userid = members.userid`
+      LEFT JOIN users ON users.userid = members.userid `
 
       if (query.length > 0) {
-        sql += `WHERE ${query.join('AND')}`
+        getData += `WHERE ${query.join('AND')}`
       }
 
-      sql += `GROUP BY projects.projectid ORDER BY projectid ASC LIMIT ${limit} OFFSET ${offset}`;
+      getData += ` GROUP BY projects.projectid ORDER BY projectid ASC LIMIT ${limit} OFFSET ${offset} `;
+      // console.log(getData);
 
-      db.query(sql, (err, dataProject) => {
+      db.query(getData, (err, dataProject) => {
+        // console.log(dataProject);
         if (err) return res.status(500).json({
           error: true,
           massage: err
         })
 
-        let getUser = `SELECT userid, concat(firstname,' ',lastname) as fullname FROM users`
+        let getUser = `SELECT userid, concat(firstname,' ',lastname) as fullname FROM users;`
 
         db.query(getUser, (err, dataUsers) => {
+          // console.log(dataUsers);
           if (err) return res.status(500).json({
             error: true,
             massage: err
+
           })
+
           res.render('projects/list', {
             url,
             user,
@@ -88,10 +97,15 @@ module.exports = (db) => {
             query: dataProject.rows,
             users: dataUsers.rows,
             option: projectOptions,
-            login: user
           })
         })
       })
+    })
+    router.post('/option', helpers.isLoggedIn, (req, res) => {
+      projectOptions.id = req.body.checkid;
+      projectOptions.name = req.body.checkname;
+      projectOptions.member = req.body.checkmember;
+      res.redirect('/projects')
     })
   });
 
