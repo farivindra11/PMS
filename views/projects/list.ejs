@@ -1,6 +1,6 @@
 <%- include('../partials/header')%>
 <%- include('./filter')%>
-
+<!-- Project Options -->
 <div class="container contable">
     <h3 class="card-title">Options</h3>
     <div class="col-sm-2">
@@ -8,21 +8,24 @@
             <p>Columns</p>
             <div class="col">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="oid">
+                    <input class="form-check-input" type="checkbox" name="checkid" value="true" id="oid"
+                        <%= option.id ? `checked` : `` %>>
                     <label class="form-check-label" for="oid">
                         ID
                     </label>
                 </div>
 
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="oname">
+                    <input class="form-check-input" type="checkbox" name="checkname" value="true" id="oname"
+                        <%= option.name ? `checked` : `` %>>
                     <label class="form-check-label" for="oname">
                         Name
                     </label>
                 </div>
 
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="omembers">
+                    <input class="form-check-input" type="checkbox" name="checkmember" value="true" id="omembers"
+                        <%= option.member ? `checked` : `` %>>
                     <label class="form-check-label" for="omembers">
                         Members
                     </label>
@@ -33,26 +36,28 @@
             </div>
         </form>
     </div>
+
     <!-- table -->
     <div class="card2">
         <div class="card-body tb">
-            <form action="" method="GET">
-                <div class="table">
-                    <table class="table table-striped table-bordered">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">Project id</th>
-                                <th scope="col">Project Name</th>
-                                <th scope="col">Porject Members</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
+            <div class="table">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
                         <tr>
-                            <td>asddas</td>
-                            <td>sasa</td>
-                            <td>sasa</td>
+                            <th <%= option.id ? `` : `hidden` %>>Project id</th>
+                            <th <%= option.name ? `` : `hidden` %>>Project Name</th>
+                            <th <%= option.member ? `` : `hidden` %>>Porject Members</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% query.forEach (item => {%>
+                        <tr>
+                            <td <%= option.id ? `` : `hidden`%>><%= item.projectid %></td>
+                            <td <%= option.name ? `` : `hidden`%>><%= item.name %></td>
+                            <td <%= option.members ? `` : `hidden`%>><%= item.member %></td>
                             <td>
-                                <a href="projects/edit">
+                                <a href="projects/edit/<%= item.projectid %>">
                                     <button type="button" class="btn btn-outline-success">Edit</button>
                                 </a>
                                 <a href="#">
@@ -61,55 +66,28 @@
                                 </a>
                             </td>
                         </tr>
-                        <tr>
-                            <td>asddas</td>
-                            <td>sasa</td>
-                            <td>sasa</td>
-                            <td>
-                                <a href="projects/edit">
-                                    <button type="button" class="btn btn-outline-success">Edit</button>
-                                </a>
-                                <a href="#">
-                                    <button type="button" class="btn btn-outline-danger"
-                                        onclick="javascript: return confirm('Yakin data akan dihapus?')">Delete</button>
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>asddas</td>
-                            <td>sasa</td>
-                            <td>sasa</td>
-                            <td><a href="/projects/edit">
-                                    <button type="button" class="btn btn-outline-success">Edit</button>
-                                </a>
-                                <a href="#">
-                                    <button type="button" class="btn btn-outline-danger"
-                                        onclick="javascript: return confirm('Yakin data akan dihapus?')">Delete</button>
-                                </a></td>
-                        </tr>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination">
-                      <li class="page-item disabled">
+                        <%})%>
+                    </tbody>
+                </table>
+            </div>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item disabled">
                         <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                      </li>
-                      <li class="page-item"><a class="page-link" href="#">1</a></li>
-                      <li class="page-item active" aria-current="page">
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item active" aria-current="page">
                         <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
-                      </li>
-                      <li class="page-item"><a class="page-link" href="#">3</a></li>
-                      <li class="page-item">
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
                         <a class="page-link" href="#">Next</a>
-                      </li>
-                    </ul>
-                  </nav>
-                <div class="add">
-                    <a class="btn btn-outline-primary" href="projects/add">Add Projects</a>
-                </div>
-            </form>
+                    </li>
+                </ul>
+            </nav>
+            <div class="add">
+                <a class="btn btn-outline-primary" href="projects/add">Add Projects</a>
+            </div>
         </div>
     </div>
 </div>
