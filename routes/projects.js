@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var helpers = require('../helpers/util')
-var path = require('path')
+var path = require('path');
+const { readSync } = require('fs');
 
 
 let projectOptions = {
@@ -109,18 +110,47 @@ module.exports = (db) => {
     })
   });
 
-  // add
+  // add project list
   router.get('/add', helpers.isLoggedIn, function (req, res, next) {
     const link = 'projects';
     const user = req.session.user
-    res.render('projects/add', {
-      link,
-      user
+    let sql = `SELECT DISTINCT (userid), concat(firstname,' ',lastname) AS fullname FROM users ORDER BY fullname`
+    db.query(sql, (err, data) => {
+      // console.log(data);
+      if (err) return res.status(500).json({
+        error: true,
+        massage: err
+      })
+
+      res.render('projects/add', {
+        link,
+        data: data.rows,
+        user
+      })
     })
   });
 
   router.post('/add', helpers.isLoggedIn, function (req, res, next) {
-    res.redirect('/projects')
+    const { members, projectName } = req.body
+
+    let sql = `INSERT INTO projects (name) values('${projectName}')`
+    db.query(sql, (err) => {
+      if (err) return res.send(err)
+
+      db.query('SELECT projectid FROM projects ORDER BY projectid desc limit 1', (err, projectid) => {
+        if (err) return res.send(err)
+
+        let id = projectid.rows[0].projectid;
+        let query = [];
+
+        for (let i = 0; i < members.length; i++) {
+          query.push(`(${members[i]}, ${id})`)
+        }
+        db.query(`INSERT INTO members (userid, projectid) values ${query.join(',')}`, (err, data) => {
+          res.redirect('/projects')
+        })
+      })
+    })
   });
 
   // edit
