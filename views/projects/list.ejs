@@ -46,16 +46,19 @@
                         <tr>
                             <th <%= option.id ? `` : `hidden` %>>Project id</th>
                             <th <%= option.name ? `` : `hidden` %>>Project Name</th>
-                            <th <%= option.member ? `` : `hidden` %>>Porject Members</th>
+                            <th <%= option.member ? `` : `hidden` %>>Project Members</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <% query.forEach (item => {%>
                         <tr>
-                            <td <%= option.id ? `` : `hidden`%>><%= item.projectid %></td>
+                            <td <%= option.id ? `` : `hidden`%>>
+                                <a class="btn btn-outline-secondary" href="/projects/<%=item.projectid%>/overview">
+                                <%=item.projectid%>
+                              </a></td>
                             <td <%= option.name ? `` : `hidden`%>><%= item.name %></td>
-                            <td <%= option.members ? `` : `hidden`%>><%= item.member %></td>
+                            <td <%= option.member ? `` : `hidden`%>><%= item.member %></td>
                             <td>
                                 <a href="projects/edit/<%= item.projectid %>">
                                     <button type="button" class="btn btn-outline-success">Edit</button>
@@ -72,16 +75,16 @@
             </div>
             <nav aria-label="Page navigation example">
                 <ul class="pagination">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                    <li class="page-item <%= page==1 ? 'disabled' : '' %>"><a class="page-link"
+                        href="/projects<%= url.replace(`?page=${parseInt(page)}`, `?page=${ parseInt(page) - 1}`) %>">Previous</a>
                     </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item active" aria-current="page">
-                        <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                    <%for (let i=1; i <= pages; i++ ){%>
+                    <li class="page-item <%= (i == page) ? 'active' : '' %> "><a class="page-link"
+                        href="/projects<%= url.replace(`?page=${parseInt(page)}`,`?page=${i}`) %>"><%= i %></a>
                     </li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
+                    <%}%>
+                          <li class="page-item <%= page==pages ? 'disabled' : '' %>"> <a class="page-link disabled"
+                      href="/projects<%= url.replace(`?page=${parseInt(page)}`,`?page=${parseInt(page) + 1}`) %>">Next</a>
                     </li>
                 </ul>
             </nav>
