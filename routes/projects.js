@@ -154,17 +154,78 @@ module.exports = (db) => {
   });
 
   // edit
-  router.get('/edit/:id', helpers.isLoggedIn, function (req, res, next) {
+  router.get('/edit/:projectid', helpers.isLoggedIn, function (req, res, next) {
     const link = 'projects';
     const user = req.session.user
-    res.render('projects/edit', {
-      link,
-      user
+    let id = req.params.projectid
+    let sql = `SELECT projects.name FROM projects WHERE projects.projectid = ${id}`
+    let fullName = `SELECT DISTINCT (userid), CONCAT(firstname, ' ', lastname) AS fullname
+    FROM users ORDER BY fullname`
+    let sqlmember = `SELECT members.userid, projects.name, projects.projectid FROM members
+    LEFT JOIN projects ON members.projectid = projects.projectid WHERE projects.projectid = ${id}`
+
+    db.query(sql, (err, data) => {
+      if (err) return res.send(err)
+
+      let projectName = data.rows[0];
+      db.query(fullName, (err, member) => {
+        if (err) return res.send(err)
+
+        let members = member.rows;
+        db.query(sqlmember, (err, membersData) => {
+          if (err) return res.send(err)
+
+          let memberData = membersData.rows.map(item => item.userid)
+          res.render('projects/edit', {
+            link,
+            memberData,
+            projectName,
+            members,
+            user
+          })
+
+        })
+      })
     })
   });
 
-  router.post('/edit/:id', helpers.isLoggedIn, function (req, res, next) {
-    res.redirect('/projects')
+  router.post('/edit/:projectid', helpers.isLoggedIn, function (req, res, next) {
+    let id = req.params.projectid
+
+    const { editName, editMembers } = req.body
+
+    let sql = `UPDATE projects SET name = '${editName}' WHERE projectid = ${id}`
+
+    if (id && editName && editMembers) {
+      db.query(sql, (err) => {
+        if (err) return res.send(err)
+
+        let memberDelete = `DELETE FROM members WHERE projectid = ${id}`
+        db.query(memberDelete, (err) =>{
+          if (err) return res.send(err)
+
+          let result = []
+          if (typeof editMembers == 'string') {
+            result.push(`(${editMembers}, ${id})`)
+          } else {
+            for (let i = 0; i < editMembers.length; i++) {
+              result.push(`(${editMembers[i]}, ${id})`)
+            }
+          }
+
+          let memberUpdate = `INSERT INTO members (userid, projectid) VALUES ${result.join(",")}`
+          db.query(memberUpdate, (err) => {
+            if (err) {
+            return res.send(err)
+          }
+          res.redirect('/projects')
+          })
+        })
+      })
+    } else {
+      res.redirect(`/projects/edit/${id}`)
+    }
+   
   });
 
   // delete
