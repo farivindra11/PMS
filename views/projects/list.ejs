@@ -60,10 +60,10 @@
                             <td <%= option.name ? `` : `hidden`%>><%= item.name %></td>
                             <td <%= option.member ? `` : `hidden`%>><%= item.member %></td>
                             <td>
-                                <a href="projects/edit/<%= item.projectid %>">
+                                <a href="/projects/edit/<%= item.projectid %>">
                                     <button type="button" class="btn btn-outline-success">Edit</button>
                                 </a>
-                                <a href="#">
+                                <a href="/projects/delete/<%= item.projectid %>">
                                     <button type="button" class="btn btn-outline-danger"
                                         onclick="javascript: return confirm('Yakin data akan dihapus?')">Delete</button>
                                 </a>
