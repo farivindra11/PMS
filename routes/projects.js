@@ -404,7 +404,7 @@ module.exports = (db) => {
             pages,
             pageUrl,
             members: dataMember.rows,
-            project: dataProject[0],
+            project: dataProject.rows[0],
             option: memberOptions,
             user
           })
