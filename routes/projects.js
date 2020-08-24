@@ -248,8 +248,13 @@ module.exports = (db) => {
   // end main project
 
   // Overview
-  router.get('/overview/:projectid', helpers.isLoggedIn, function (req, res, next) {
-    res.render('projects/overview/view', { user: req.session.user })
+  router.get('/:projectid/overview', helpers.isLoggedIn, function (req, res, next) {
+    const link = 'projects';
+    const user = req.session.user
+    res.render('projects/overview/view', {
+    link,
+    user  
+    })
   });
 
   // Activity
