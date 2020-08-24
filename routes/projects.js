@@ -201,7 +201,7 @@ module.exports = (db) => {
         if (err) return res.send(err)
 
         let memberDelete = `DELETE FROM members WHERE projectid = ${id}`
-        db.query(memberDelete, (err) =>{
+        db.query(memberDelete, (err) => {
           if (err) return res.send(err)
 
           let result = []
@@ -216,16 +216,16 @@ module.exports = (db) => {
           let memberUpdate = `INSERT INTO members (userid, projectid) VALUES ${result.join(",")}`
           db.query(memberUpdate, (err) => {
             if (err) {
-            return res.send(err)
-          }
-          res.redirect('/projects')
+              return res.send(err)
+            }
+            res.redirect('/projects')
           })
         })
       })
     } else {
       res.redirect(`/projects/edit/${id}`)
     }
-   
+
   });
 
   // delete
@@ -234,7 +234,7 @@ module.exports = (db) => {
     let membersData = `DELETE FROM members WHERE projectid =${id}`;
 
     db.query(membersData, (err) => {
-      if(err) return res.send(err)
+      if (err) return res.send(err)
 
       let projectsData = `DELETE FROM projects WHERE projectid = ${id}`;
       db.query(projectsData, (err) => {
@@ -250,10 +250,73 @@ module.exports = (db) => {
   // Overview
   router.get('/:projectid/overview', helpers.isLoggedIn, function (req, res, next) {
     const link = 'projects';
+    const url = 'overview'
+    const projectid = req.params.projectid
     const user = req.session.user
-    res.render('projects/overview/view', {
-    link,
-    user  
+
+    let dataProject = `SELECT * FROM project WHERE projectid = ${projectid}`
+    db.query(dataProject, (err, projectData) => {
+      if (err) return res.send(err)
+
+      let dataMember = `SELECT users.firstname, users.lastname, members.role FROM members
+      LEFT JOIN users ON members.userid = users.userid WHERE members.projectid = ${projectid}`
+      db.query(dataMember, (err, memberData) => {
+        if (err) return res.send(err)
+
+        let dataIssues = `SELECT tracker, status FROM issues WHERE projectid = ${projectid}`
+        db.query(dataIssues, (err, issuesData) => {
+          if (err) return res.send(err)
+
+          let bugOpen = 0;
+          let bugTotal = 0;
+          let featureOpen = 0;
+          let featureTotal = 0;
+          let supportOpen = 0;
+          let supportTotal = 0;
+
+          issuesData.rows.forEach(item => {
+            if (item.tracker == 'Bug' && item.status !== "closed") {
+              bugOpen += 1
+            }
+            if (item.tracker == 'Bug') {
+              bugTotal += 1
+            }
+          })
+
+          issuesData.rows.forEach(item => {
+            if (item.tracker == 'Feature' && item.status !== "closed") {
+              featureOpen += 1
+            }
+            if (item.tracker == 'Feature') {
+              featureTotal += 1
+            }
+          })
+
+          issuesData.rows.forEach(item => {
+            if (item.tracker == 'Support' && item.status !== "closed") {
+              supportOpen += 1
+            }
+            if (item.tracker == 'Support') {
+              supportTotal += 1
+            }
+          })
+
+          res.render('projects/overview/view', {
+            link,
+            user,
+            url,
+            projectid,
+            data: projectData.rows[0],
+            members: memberData.rows,
+            bugOpen,
+            bugTotal,
+            featureOpen,
+            featureTotal,
+            supportOpen,
+            supportTotal
+          })
+        })
+      })
     })
   });
 
