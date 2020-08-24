@@ -1,0 +1,169 @@
+<%- include('../../partials/header')%>
+<%- include('../../partials/sidebar')%>
+<div class="container">
+    <!-- filter -->
+    <h1 class="card-title">Projects Members</h1>
+    <div class="name" style="background-color: rgb(157, 177, 177);">
+        <h3 style="text-align: right;">
+            <small class="text-black" style="padding: 30px;">#<%=projectid%> <%= project.name%></small>
+        </h3>
+    </div>
+    <hr>
+    <h3 class="card-title">Filters</h3>
+    <div class="col-md-12">
+        <form method="get" id="filterForm">
+            <input type="hidden" name="page" value="1">
+            <div class="form-group row">
+                <label for="id" class="col-sm-2 col-form-label">
+                    <input class="form-check-input" name="checkId" type="checkbox" id="id">
+                    ID
+                </label>
+                <div class="col-sm-10">
+                    <input type="number" name="memberId" class="form-control" id="id" placeholder="ID">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">
+                    <input class="form-check-input" name="checkName" type="checkbox" id="name">
+                    Name
+                </label>
+                <div class="col-sm-10">
+                    <input type="text" name="memberName" class="form-control" id="name" placeholder="Name">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="position" class="col-sm-2 col-form-label">
+                    <input class="form-check-input" name="checkPosition" type="checkbox" id="position">
+                    Position
+                </label>
+                <div class="col-sm-10">
+                    <select id="position" class="custom-select custom-select" name="position">
+                        <option selected disabled>Choose the position ...</option>
+                        <option value="Manager">Manager</option>
+                        <option value="Software Developer">Software Developer</option>
+                        <option value="Quality Assurance">Quality Assurance</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-outline-dark">Search</button>
+
+                    <a href="/projects/members/<%=projectid%>">
+                        <button type="submit" class="btn btn-outline-dark">reset</button>
+                    </a>
+
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- checkbox -->
+    <div class="container contable">
+        <h3 class="card-title">Options</h3>
+        <div class="col-sm-2">
+            <form action="/projects/members/<%=projectid%>/option" method="POST">
+                <p>Columns</p>
+                <div class="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="checkid" value="true" id="oid"
+                            <%= option.id ? `checked` : `` %>>
+                        <label class="form-check-label" for="oid">
+                            ID
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="checkname" value="true" id="oname"
+                            <%= option.name ? `checked` : `` %>>
+                        <label class="form-check-label" for="oname">
+                            Name
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="checkposition" value="true" id="oposition"
+                            <%= option.position ? `checked` : `` %>>
+                        <label class="form-check-label" for="oposition">
+                            Positiion
+                        </label>
+                    </div>
+                </div>
+                <div class="apply">
+                    <button class="btn btn-outline-primary">Apply</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- table -->
+        <div class="card2">
+            <div class="card-body tb">
+                <div class="table">
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th <%= option.id ? `` : `hidden` %>>#</th>
+                                <th <%= option.name ? `` : `hidden` %>>Name</th>
+                                <th <%= option.position ? `` : `hidden` %>>Positiion</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% members.forEach (item => {%>
+                            <tr>
+                                <td <%= option.id ? `` : `hidden`%>><%=item.id %></td>
+                                <td <%= option.name ? `` : `hidden`%>><%= item.fullname %></td>
+                                <td <%= option.position ? `` : `hidden`%>>
+                                    <%=item.role ? item.role.toUpperCase() : 'NOT ASSIGNED'%></td>
+                                <td>
+                                    <a href="#">
+                                        <button class="btn btn-outline-success">Edit</button>
+                                    </a>
+                                    <a href="#">
+                                        <button class="btn btn-outline-danger"
+                                            onclick="return confirm('Are you sure you want to delete this item?');">Delete</button>
+                                    </a>
+                                </td>
+                                </td>
+                            </tr>
+                            <%})%>
+                        </tbody>
+                    </table>
+                </div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item <%= page <= 1 ? 'disabled' : '' %>">
+                            <a class="page-link"
+                                href="/projects/members/<%= pageUrl.replace(`page=${parseInt(page)}`, `page=${(parseInt(page) - 1)}`) %>"
+                                aria-label="Previous">
+                                Previous
+                            </a>
+                        </li>
+                        <% for (let i = 1; i <= pages; i++) { %>
+                        <li class="page-item <%= page == i ? 'active' : '' %>">
+                            <a class="page-link"
+                                href="/projects/members/<%= pageUrl.replace(`page=${parseInt(page)}`, `page=${i}`) %>">
+                                <%= i %>
+                            </a>
+                        </li>
+                        <% } %>
+                        <li class="page-item <%= page >= pages ? 'disabled' : '' %>">
+                            <a class="page-link"
+                                href="/projects/members/<%= pageUrl.replace(`page=${parseInt(page)}`, `page=${(parseInt(page) + 1)}`) %>"
+                                aria-label="Next">
+                                Next
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="add">
+                    <a class="btn btn-outline-primary" href="#">Add Member</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <%- include('../../partials/footer')%>
