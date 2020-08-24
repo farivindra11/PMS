@@ -54,7 +54,7 @@
                         <% query.forEach (item => {%>
                         <tr>
                             <td <%= option.id ? `` : `hidden`%>>
-                                <a class="btn btn-outline-secondary" href="/projects/<%=item.projectid%>/overview">
+                                <a class="btn btn-outline-secondary" href="/projects/overview/<%=item.projectid%>">
                                 <%=item.projectid%>
                               </a></td>
                             <td <%= option.name ? `` : `hidden`%>><%= item.name %></td>
