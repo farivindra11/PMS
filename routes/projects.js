@@ -2,13 +2,19 @@ var express = require('express');
 var router = express.Router();
 var helpers = require('../helpers/util')
 var path = require('path');
-const { readSync } = require('fs');
+
 
 
 let projectOptions = {
   id: true,
   name: true,
   member: true
+}
+
+let memberOptions = {
+  id: true,
+  name: true,
+  position: true
 }
 
 /* GET home page. */
@@ -248,86 +254,172 @@ module.exports = (db) => {
   // end main project
 
   // Overview
-  router.get('/:projectid/overview', helpers.isLoggedIn, function (req, res, next) {
+  router.get('/overview/:projectid', helpers.isLoggedIn, function (req, res, next) {
     const link = 'projects';
     const url = 'overview'
     const projectid = req.params.projectid
     const user = req.session.user
 
-    let dataProject = `SELECT * FROM project WHERE projectid = ${projectid}`
-    db.query(dataProject, (err, projectData) => {
-      if (err) return res.send(err)
+    // let dataProject = `SELECT * FROM project WHERE projectid = ${projectid}`
+    // db.query(dataProject, (err, projectData) => {
+    //   if (err) return res.send(err)
 
-      let dataMember = `SELECT users.firstname, users.lastname, members.role FROM members
-      LEFT JOIN users ON members.userid = users.userid WHERE members.projectid = ${projectid}`
-      db.query(dataMember, (err, memberData) => {
+    //   let dataMember = `SELECT users.firstname, users.lastname, members.role FROM members
+    //   LEFT JOIN users ON members.userid = users.userid WHERE members.projectid = ${projectid}`
+    //   db.query(dataMember, (err, memberData) => {
+    //     if (err) return res.send(err)
+
+    //     let dataIssues = `SELECT tracker, status FROM issues WHERE projectid = ${projectid}`
+    //     db.query(dataIssues, (err, issuesData) => {
+    //       if (err) return res.send(err)
+
+    //       let bugOpen = 0;
+    //       let bugTotal = 0;
+    //       let featureOpen = 0;
+    //       let featureTotal = 0;
+    //       let supportOpen = 0;
+    //       let supportTotal = 0;
+
+    //       issuesData.rows.forEach(item => {
+    //         if (item.tracker == 'Bug' && item.status !== "closed") {
+    //           bugOpen += 1
+    //         }
+    //         if (item.tracker == 'Bug') {
+    //           bugTotal += 1
+    //         }
+    //       })
+
+    //       issuesData.rows.forEach(item => {
+    //         if (item.tracker == 'Feature' && item.status !== "closed") {
+    //           featureOpen += 1
+    //         }
+    //         if (item.tracker == 'Feature') {
+    //           featureTotal += 1
+    //         }
+    //       })
+
+    //       issuesData.rows.forEach(item => {
+    //         if (item.tracker == 'Support' && item.status !== "closed") {
+    //           supportOpen += 1
+    //         }
+    //         if (item.tracker == 'Support') {
+    //           supportTotal += 1
+    //         }
+    //       })
+
+    res.render('projects/overview/view', {
+      link,
+      user,
+      url,
+      projectid
+      // data: projectData.rows[0],
+      // members: memberData.rows,
+      // bugOpen,
+      // bugTotal,
+      // featureOpen,
+      // featureTotal,
+      // supportOpen,
+      // supportTotal
+    })
+  })
+  //     })
+  //   })
+  // });
+
+  // Activity
+  router.get('/activity/:projectid', helpers.isLoggedIn, function (req, res, next) {
+
+
+    res.render('projects/activity/view', { user: req.session.user })
+  });
+
+
+  // Members start
+  router.get('/members/:projectid', helpers.isLoggedIn, function (req, res, next) {
+    const link = 'projects';
+    const url = 'members';
+    const projectid = req.params.projectid;
+    const user = req.session.user;
+    let getData = `SELECT COUNT(member) AS total FROM(SELECT members.userid FROM members JOIN users 
+      ON members.userid = users.userid WHERE members.projectid = ${projectid}`;
+
+    const { checkId, checkName, checkPosition, memberId, memberName, position } = req.query;
+
+    let query = []
+
+    if (checkId && memberId) {
+      query.push(`members.id=${memberId}`)
+    }
+    if (checkName && memberName) {
+      query.push(`CONCAT(users.firstname,' ',users.lastname) LIKE '%${memberName}%'`)
+    }
+    if (checkPosition && position) {
+      query.push(`members.role =${position}`)
+    }
+    if (query.length > 0) {
+      getData += ` AND ${query.join(" AND ")}`
+    }
+
+    getData += `) AS member`;
+
+    db.query(getData, (err, totalData) => {
+      if (err) return res.status(500).json({
+        error: true,
+        massage: err
+      })
+      const pageUrl = (req.url == `/members/${projectid}`) ? `/members/${projectid}/?page=1` : req.url;
+      const page = req.query.page || 1
+      const limit = 3
+      const offset = (page - 1) * limit
+      const total = totalData.rows[0].total
+      const pages = Math.ceil(total / limit)
+
+      let getData = `SELECT users.userid, projects.name, projects.projectid, members.id, members.role, 
+      CONCAT(users.firstname,' ',users.lastname) AS fullname FROM members
+      LEFT JOIN projects ON projects.projectid = members.projectid
+      LEFT JOIN users ON users.userid = members.userid WHERE members.projectid = ${projectid}`
+
+
+      if (query.length > 0) {
+        getData += ` AND ${query.join(' AND ')}`
+      }
+      getData += ` ORDER BY members.id ASC`
+      getData += ` LIMIT ${limit} OFFSET ${offset}`
+
+      db.query(getData, (err, dataMember) => {
         if (err) return res.send(err)
 
-        let dataIssues = `SELECT tracker, status FROM issues WHERE projectid = ${projectid}`
-        db.query(dataIssues, (err, issuesData) => {
-          if (err) return res.send(err)
+        let projectData = `SELECT * FROM projects WHERE projectid = ${projectid}`
+        db.query(projectData, (err, dataProject) => {
+          if (err) return res.status(500).json({
+            error: true,
+            massage: err
 
-          let bugOpen = 0;
-          let bugTotal = 0;
-          let featureOpen = 0;
-          let featureTotal = 0;
-          let supportOpen = 0;
-          let supportTotal = 0;
-
-          issuesData.rows.forEach(item => {
-            if (item.tracker == 'Bug' && item.status !== "closed") {
-              bugOpen += 1
-            }
-            if (item.tracker == 'Bug') {
-              bugTotal += 1
-            }
           })
-
-          issuesData.rows.forEach(item => {
-            if (item.tracker == 'Feature' && item.status !== "closed") {
-              featureOpen += 1
-            }
-            if (item.tracker == 'Feature') {
-              featureTotal += 1
-            }
-          })
-
-          issuesData.rows.forEach(item => {
-            if (item.tracker == 'Support' && item.status !== "closed") {
-              supportOpen += 1
-            }
-            if (item.tracker == 'Support') {
-              supportTotal += 1
-            }
-          })
-
-          res.render('projects/overview/view', {
+          res.render('projects/members/list', {
             link,
-            user,
             url,
             projectid,
-            data: projectData.rows[0],
-            members: memberData.rows,
-            bugOpen,
-            bugTotal,
-            featureOpen,
-            featureTotal,
-            supportOpen,
-            supportTotal
+            page,
+            pages,
+            pageUrl,
+            members: dataMember.rows,
+            project: dataProject[0],
+            option: memberOptions,
+            user
           })
         })
       })
     })
-  });
+    router.post('/members/:projectid/option', helpers.isLoggedIn, (req, res) => {
+      const projectid = req.params.projectid
 
-  // Activity
-  router.get('/activity/:projectid', helpers.isLoggedIn, function (req, res, next) {
-    res.render('projects/activity/view', { user: req.session.user })
-  });
+      memberOptions.id = req.body.checkid;
+      memberOptions.name = req.body.checkname;
+      memberOptions.position = req.body.checkposition;
 
-  // Members start
-  router.get('/members/:projectid', helpers.isLoggedIn, function (req, res, next) {
-    res.render('projects/members/list', { user: req.session.user })
+      res.redirect(`/projects/members/${projectid}`)
+    })
   });
 
   //add
