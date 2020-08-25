@@ -13,10 +13,10 @@
 
         <form method="POST">
             <div class="form-group row">
-                <label for="inputBoolean" class="col-sm-2 col-form-label">
+                <label for="inputmember" class="col-sm-2 col-form-label">
                     Members</label>
                 <div class="col-sm-10">
-                    <select class="custom-select" name="inputmember" required="">
+                    <select class="custom-select" name="inputmember" id="inputmember" required="">
                         <option>Choose the Member ...</option>
                         <% members.forEach(item=>{%>
                         <option value="<%=item.userid%>"><%=item.fullname%></option>
