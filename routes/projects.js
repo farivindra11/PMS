@@ -470,7 +470,7 @@ module.exports = (db) => {
     const url = 'members';
     const user = req.session.user;
     let projectid = req.params.projectid;
-    let memberid = req.params.id
+    let memberid = req.params.id;
     let memberData = `SELECT members.id, CONCAT(users.firstname,' ',users.lastname) AS fullname, members.role FROM members
     LEFT JOIN users ON members.userid = users.userid WHERE projectid=${projectid} AND id=${memberid}`
 
@@ -494,7 +494,15 @@ module.exports = (db) => {
   });
 
   router.post('/members/:projectid/edit/:memberid', helpers.isLoggedIn, function (req, res, next) {
-    res.redirect(`/projects/members/${req.params.projectid}`)
+    let projectid = req.params.projectid;
+    let memberid = req.params.id;
+    let position = req.body.inputposition;
+    let editData = `UPDATE members SET role='${position}' WHERE id=${memberid}`
+    db.query(editData, (err) => {
+      if (err) return res.send(err)
+
+      res.redirect(`/projects/members/${projectid}`)
+    })
   });
 
   // delete
