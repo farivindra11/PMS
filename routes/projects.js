@@ -465,14 +465,14 @@ module.exports = (db) => {
   });
 
   // edit
-  router.get('/members/:projectid/edit/:memberid', helpers.isLoggedIn, function (req, res, next) {
+  router.get('/members/:projectid/edit/:id', helpers.isLoggedIn, function (req, res, next) {
     const link = 'projects';
     const url = 'members';
     const user = req.session.user;
     let projectid = req.params.projectid;
-    let memberid = req.params.id;
+    let id = req.params.id;
     let memberData = `SELECT members.id, CONCAT(users.firstname,' ',users.lastname) AS fullname, members.role FROM members
-    LEFT JOIN users ON members.userid = users.userid WHERE projectid=${projectid} AND id=${memberid}`
+    LEFT JOIN users ON members.userid = users.userid WHERE projectid=${projectid} AND id=${id}`
 
     db.query(memberData, (err, dataMember) => {
       if (err) return res.send(err)
@@ -484,20 +484,20 @@ module.exports = (db) => {
         res.render('projects/members/edit', {
           link,
           url,
-          user,
           projectid,
           member: dataMember.rows[0],
           project: dataProject.rows[0], 
+          user
         })
       })
     })
   });
 
-  router.post('/members/:projectid/edit/:memberid', helpers.isLoggedIn, function (req, res, next) {
+  router.post('/members/:projectid/edit/:id', helpers.isLoggedIn, function (req, res, next) {
     let projectid = req.params.projectid;
-    let memberid = req.params.id;
+    let id = req.params.id;
     let position = req.body.inputposition;
-    let editData = `UPDATE members SET role='${position}' WHERE id=${memberid}`
+    let editData = `UPDATE members SET role='${position}' WHERE id=${id}`
     db.query(editData, (err) => {
       if (err) return res.send(err)
 
@@ -506,10 +506,10 @@ module.exports = (db) => {
   });
 
   // delete
-  router.get('/members/:projectid/delete/:memberid', helpers.isLoggedIn, function (req, res, next) {
+  router.get('/members/:projectid/delete/:id', helpers.isLoggedIn, function (req, res, next) {
     let projectid = req.params.projectid
-    let memberid = req.params.id;
-    let delData = `DELETE FROM members WHERE projectid=${projectid} AND id=${memberid}`
+    let id = req.params.id;
+    let delData = `DELETE FROM members WHERE projectid=${projectid} AND id=${id}`
 
     db.query(delData, (err) => {
       if (err) return res.send(err)
