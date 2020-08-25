@@ -424,11 +424,44 @@ module.exports = (db) => {
 
   //add
   router.get('/members/:projectid/add', helpers.isLoggedIn, function (req, res, next) {
-    res.render('projects/members/add', { user: req.session.user })
+    const link = 'projects';
+    const url = 'members';
+    const user = req.session.user;
+    const projectid = req.params.projectid;
+
+    let getData = `SELECT * FROM projects WHERE projectid = ${projectid}`
+    db.query(getData, (err, dataProject) => {
+      if (err) return res.send(err)
+
+      let memberData = `SELECT userid, CONCAT(firstname,' ',lastname) As fullname FROM users
+      WHERE userid NOT IN (SELECT userid FROM members WHERE projectid = ${projectid})`
+      db.query(memberData, (err, dataMember) => {
+        if (err) return res.send(err)
+
+        res.render('projects/members/add', {
+          link,
+          url,
+          user,
+          projectid,
+          members: dataMember.rows,
+          project: dataProject.rows[0]
+        })
+      })
+    })
   });
 
   router.post('/members/:projectid/add', helpers.isLoggedIn, function (req, res, next) {
-    res.redirect(`/projects/members/${req.params.projectid}`)
+
+    const projectid = req.params.projectid
+    const { inputmember, inputposition } = req.body
+    let queryAdd = `INSERT INTO members(userid, role, projectid) VALUES ($1,$2,$3)`
+    let values = [inputmember, inputposition, projectid]
+
+    db.query(queryAdd, values, (err) => {
+      if (err) return res.send(err)
+    })
+
+    res.redirect(`/projects/members/${projectid}`)
   });
 
   // edit
