@@ -507,7 +507,15 @@ module.exports = (db) => {
 
   // delete
   router.get('/members/:projectid/delete/:memberid', helpers.isLoggedIn, function (req, res, next) {
-    res.redirect(`/projects/members/${req.params.projectid}`)
+    let projectid = req.params.projectid
+    let memberid = req.params.id;
+    let delData = `DELETE FROM members WHERE projectid=${projectid} AND id=${memberid}`
+
+    db.query(delData, (err) => {
+      if (err) return res.send(err)
+
+      res.redirect(`/projects/members/${projectid}`)
+    })
   });
   // End members
 
