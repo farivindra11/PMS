@@ -466,7 +466,31 @@ module.exports = (db) => {
 
   // edit
   router.get('/members/:projectid/edit/:memberid', helpers.isLoggedIn, function (req, res, next) {
-    res.render('projects/members/edit', { user: req.session.user })
+    const link = 'projects';
+    const url = 'members';
+    const user = req.session.user;
+    let projectid = req.params.projectid;
+    let memberid = req.params.id
+    let memberData = `SELECT members.id, CONCAT(users.firstname,' ',users.lastname) AS fullname, members.role FROM members
+    LEFT JOIN users ON members.userid = users.userid WHERE projectid=${projectid} AND id=${memberid}`
+
+    db.query(memberData, (err, dataMember) => {
+      if (err) return res.send(err)
+
+      let projectData = `SELECT * FROM projects WHERE projectid= ${projectid}`
+      db.query(projectData, (err, dataProject) => {
+        if (err) return res.send(err)
+
+        res.render('projects/members/edit', {
+          link,
+          url,
+          user,
+          projectid,
+          member: dataMember.rows[0],
+          project: dataProject.rows[0], 
+        })
+      })
+    })
   });
 
   router.post('/members/:projectid/edit/:memberid', helpers.isLoggedIn, function (req, res, next) {
