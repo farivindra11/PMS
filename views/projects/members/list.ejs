@@ -118,10 +118,10 @@
                                 <td <%= option.position ? `` : `hidden`%>>
                                     <%=item.role ? item.role.toUpperCase() : 'NOT ASSIGNED'%></td>
                                 <td>
-                                    <a href="#">
+                                    <a href="/projects/members/<%=projectid%>/edit/<%=item.id%>">
                                         <button class="btn btn-outline-success">Edit</button>
                                     </a>
-                                    <a href="#">
+                                    <a href="/projects/members/<%=projectid%>/delete/<%=item.id%>">
                                         <button class="btn btn-outline-danger"
                                             onclick="return confirm('Are you sure you want to delete this item?');">Delete</button>
                                     </a>
