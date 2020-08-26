@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var helpers = require('../helpers/util')
-var path = require('path');
+var helpers = require('../helpers/util');
+var moment = require('moment');
+
 
 
 
@@ -17,11 +18,17 @@ let memberOptions = {
   position: true
 }
 
+let issuesOptions = {
+  checkid : true,
+  checksubject : true,
+  checktracker : true
+}
+
 /* GET home page. */
 
 module.exports = (db) => {
 
-  // Start main project
+  ////////////////////////////////////////////////////////// Start main project //////////////////////////////////////////////////////////
   router.get('/', helpers.isLoggedIn, function (req, res, next) {
     const link = 'projects';
     const user = req.session.user
@@ -253,7 +260,7 @@ module.exports = (db) => {
   });
   // end main project
 
-  // Overview
+  ////////////////////////////////////////////////////////// Overview //////////////////////////////////////////////////////////
   router.get('/overview/:projectid', helpers.isLoggedIn, function (req, res, next) {
     const link = 'projects';
     const url = 'overview'
@@ -334,7 +341,7 @@ module.exports = (db) => {
   });
 
 
-  // Members start
+  ////////////////////////////////////////////////////////// Members start //////////////////////////////////////////////////////////
   router.get('/members/:projectid', helpers.isLoggedIn, function (req, res, next) {
     const link = 'projects';
     const url = 'members';
@@ -486,7 +493,7 @@ module.exports = (db) => {
           url,
           projectid,
           member: dataMember.rows[0],
-          project: dataProject.rows[0], 
+          project: dataProject.rows[0],
           user
         })
       })
@@ -519,9 +526,93 @@ module.exports = (db) => {
   });
   // End members
 
-  // Issues start
+  ///////////////////////////////////////////////  Issues start ///////////////////////////////////////////////
   router.get('/issues/:projectid', helpers.isLoggedIn, function (req, res, next) {
-    res.render('projects/issues/list', { user: req.session.user })
+    const link = 'projects';
+    const url = 'issues';
+    const projectid = req.params.id
+    let projectData = `SELECT * FROM projects WHERE projectid=${projectid}`
+
+    let { checkId, checkSubject, checkTracker, issuesId, issuesSubject, issuesTracker } = req.query;
+
+    let query = [];
+    let search = ''
+
+    if (checkId && issuesId) {
+      query.push(`issues.issueid=${issuesId}`)
+    }
+    if (checkSubject && issuesSubject) {
+      query.push(`issues.subject ILIKE '%${issuesSubject}%'`)
+    }
+    if (checkTracker && issuesTracker) {
+      query.push(`issues.tracker='${issuesTracker}'`)
+    }
+    if (query.length > 0) {
+      search += ` AND ${query.join(' AND ')}`
+    }
+
+    let dataTotal = `SELECT COUNT(issueid) AS total FROM issues WHERE projectid = ${projectid} ${search}`
+
+    db.query(projectData, (err, dataProject) => {
+      if (err) return res.send(err)
+
+      let project = dataProject.rows[0];
+      db.query(dataTotal, (err, totalData) => {
+        if (err) return res.send(err)
+
+        let total = totalData.rows[0].total;
+
+        const urlPage = req.url == `/${projectid}/issues` ? `/${projectid}/issues/?page=1` : req.url;
+
+        const page = req.query.page || 1
+        const limit = 3;
+        const offset = (page - 1) * limit;
+        const pages = Math.ceil(total / limit)
+
+        let issuesData = `SELECT issues.*, CONCAT(users.firstname,' ',users.lastname) AS authorname FROM issues
+        LEFT JOIN users ON issues.author = users.userid WHERE issues.projectid=${projectid} ${search} 
+        ORDER BY issues.issueid ASC LIMIT ${limit} OFFSET ${offset}`
+
+        db.query(issuesData, (err, dataIssues) => {
+          if (err) return res.send(err)
+
+          let issues = dataIssues.rows;
+
+          let assigneeData = `SELECT users.userid, CONCAT(firstname,' ',lastname) AS fullname FROM members
+          LEFT JOIN users ON members.userid=users.userid WHERE projectid=${projectid}`
+
+          db.query(assigneeData, (err, dataAssignee) => {
+            if (err) return res.send(err)
+
+            let assignee = dataAssignee.rows
+
+            res.render('projects/issues/list', {
+              link,
+              url,
+              projectid,
+              project,
+              urlPage,
+              page,
+              pages,
+              issues,
+              assignee,
+              option: issuesOptions,
+              moment,
+              user: req.session.user
+            })
+          })
+        })
+      })
+    })
+    router.post('/issues/:projectid', helpers.isLoggedIn, function (req, res, next) {
+      const projectid = req.params.projectid;
+
+      issuesOptions.checkid = req.body.checkid
+      issuesOptions.checksubject = req.body.checksubject
+      issuesOptions.checktracker = req.body.checktracker
+
+      res.redirect(`/issues/${projectid}`)
+    })
   });
 
   //add
