@@ -12,12 +12,12 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link  <%= url == 'members' ? 'active' : '' %>" href="/projects/members/<%= projectid%>/">
+                <a class="nav-link <%= url == 'members' ? 'active' : '' %>" href="/projects/members/<%= projectid%>">
                     Members
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link <%= url == 'issues' ? 'active' : '' %>" href="/projects/issues/<%= projectid%>">
                     Issues
                 </a>
             </li>
