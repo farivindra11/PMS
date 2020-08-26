@@ -5,7 +5,7 @@
     <h1 class="card-title">Projects Members</h1>
     <div class="name" style="background-color: rgb(157, 177, 177);">
         <h3 style="text-align: right;">
-            <small class="text-black" style="padding: 30px;">#<%=projectid%></small>
+            <small class="text-black" style="padding: 30px;">#<%=projectid%> <%=project.name%></small>
         </h3>
     </div>
     <hr>
@@ -19,27 +19,27 @@
                     ID
                 </label>
                 <div class="col-sm-10">
-                    <input type="number" name="memberId" class="form-control" id="id" placeholder="ID">
+                    <input type="number" name="issuesId" class="form-control" id="id" placeholder="Issues ID">
                 </div>
             </div>
 
             <div class="form-group row">
                 <label for="name" class="col-sm-2 col-form-label">
-                    <input class="form-check-input" name="checkName" type="checkbox" id="name">
+                    <input class="form-check-input" name="checkSubject" type="checkbox" id="name">
                     Subject
                 </label>
                 <div class="col-sm-10">
-                    <input type="text" name="memberName" class="form-control" id="name" placeholder="Name">
+                    <input type="text" name="issuesSubject" class="form-control" id="name" placeholder="Issues Subject">
                 </div>
             </div>
 
             <div class="form-group row">
-                <label for="position" class="col-sm-2 col-form-label">
-                    <input class="form-check-input" name="checkPosition" type="checkbox" id="position">
+                <label for="issuesTracker" class="col-sm-2 col-form-label">
+                    <input class="form-check-input" name="checkTracker" type="checkbox" id="issuesTracker">
                     Tracker
                 </label>
                 <div class="col-sm-10">
-                    <select id="position" class="custom-select custom-select" name="position">
+                    <select id="issuesTracker" class="custom-select custom-select" name="issuesTracker">
                         <option selected disabled>Choose the issues ...</option>
                         <option value="Bug">Bug</option>
                         <option value="Feature">Feature</option>
@@ -60,15 +60,15 @@
         </form>
     </div>
 
-     <!-- checkbox -->
-     <div class="container contable">
+    <!-- checkbox -->
+    <div class="container contable">
         <h3 class="card-title">Options</h3>
         <div class="col-sm-2">
-            <form action="/projects/members/<%=projectid%>/option" method="POST">
+            <form action="" method="POST">
                 <p>Columns</p>
                 <div class="col">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="checkid" value="true" id="oid" placeholder="Issues ID"
+                        <input class="form-check-input" type="checkbox" name="checkid" value="true" id="oid"
                             <%= option.checkid ? `checked` : `` %>>
                         <label class="form-check-label" for="oid">
                             ID
@@ -76,7 +76,7 @@
                     </div>
 
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="checkname" value="true" id="oname" placeholder="Subject Issues"
+                        <input class="form-check-input" type="checkbox" name="checksubject" value="true" id="oname"
                             <%= option.checksubject ? `checked` : `` %>>
                         <label class="form-check-label" for="oname">
                             Subject
@@ -84,7 +84,7 @@
                     </div>
 
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="checkposition" value="true" id="oposition"
+                        <input class="form-check-input" type="checkbox" name="checktracker" value="true" id="oposition"
                             <%= option.checktracker ? `checked` : `` %>>
                         <label class="form-check-label" for="oposition">
                             Tracker
@@ -92,9 +92,71 @@
                     </div>
                 </div>
                 <div class="apply">
-                    <button class="btn btn-outline-primary">Apply</button>
+                    <button class="btn btn-outline-primary" type="submit">Apply</button>
                 </div>
             </form>
         </div>
-</div>
-<%- include('../../partials/footer')%>
+
+        <!-- table -->
+        <div class="card2">
+            <div class="card-body tb">
+                <div class="table">
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th <%= option.checkid ? `` : `hidden` %>>ID</th>
+                                <th <%= option.checksubject ? `` : `hidden` %>>Subject</th>
+                                <th <%= option.checktracker ? `` : `hidden` %>>Tracker</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% issues.forEach (item => {%>
+                            <tr>
+                                <td <%= option.checkid ? `` : `hidden`%><%= item.issueid %></td>
+                                <td <%= option.checksubject ? `` : `hidden`%>><%= item.subject %></td>
+                                <td <%= option.checktracker ? `` : `hidden`%>>
+                                    <%if(item.tracker == 'Bug'){%>
+                                    <h5><span class="badge badge-pill badge-warning"><%= item.tracker %></span></h5>
+                                    <%} else if(item.tracker == 'Feature'){%>
+                                    <h5><span class="badge badge-pill badge-succes"><%= item.tracker %></span></h5>
+                                    <%}else{%>
+                                    <h5><span class="badge badge-pill badge-info"><%= item.tracker %></span></h5>
+                                    <%}%>
+                                </td>
+                                <td>
+                                <a href="#">
+                                    <button type="button" class="btn btn-outline-success">Edit</button>
+                                    </a>
+                                    <a href="#">
+                                        <button type="button" class="btn btn-outline-danger"
+                                            onclick="javascript: return confirm('Yakin data akan dihapus?')">Delete</button>
+                                    </a>
+                                </td>
+                            </tr>
+                            <%})%>
+                        </tbody>
+                    </table>
+                </div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item <%= page==1 ? 'disabled' : '' %>"><a class="page-link"
+                                href="/projects<%= url.replace(`?page=${parseInt(page)}`, `?page=${ parseInt(page) - 1}`) %>">Previous</a>
+                        </li>
+                        <%for (let i=1; i <= pages; i++ ){%>
+                        <li class="page-item <%= (i == page) ? 'active' : '' %> "><a class="page-link"
+                                href="/projects<%= url.replace(`?page=${parseInt(page)}`,`?page=${i}`) %>"><%= i %></a>
+                        </li>
+                        <%}%>
+                          <li class="page-item <%= page==pages ? 'disabled' : '' %>"> <a class="page-link disabled"
+                            href="/projects<%= url.replace(`?page=${parseInt(page)}`,`?page=${parseInt(page) + 1}`) %>">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="add">
+                    <a class="btn btn-outline-primary" href="/add">Add Projects</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include('../../partials/footer')%>

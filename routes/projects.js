@@ -530,7 +530,7 @@ module.exports = (db) => {
   router.get('/issues/:projectid', helpers.isLoggedIn, function (req, res, next) {
     const link = 'projects';
     const url = 'issues';
-    const projectid = req.params.id
+    const projectid = req.params.projectid
     let projectData = `SELECT * FROM projects WHERE projectid=${projectid}`
 
     let { checkId, checkSubject, checkTracker, issuesId, issuesSubject, issuesTracker } = req.query;
@@ -562,8 +562,7 @@ module.exports = (db) => {
 
         let total = totalData.rows[0].total;
 
-        const urlPage = req.url == `/${projectid}/issues` ? `/${projectid}/issues/?page=1` : req.url;
-
+        const urlPage = req.url == `/issues${projectid}/` ? `/issues/${projectid}/?page=1` : req.url;
         const page = req.query.page || 1
         const limit = 3;
         const offset = (page - 1) * limit;
