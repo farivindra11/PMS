@@ -1,0 +1,225 @@
+<%- include('../../partials/header')%>
+<%- include('../../partials/sidebar')%>
+<div class="container">
+    <h1 class="card-title">Add New Issues !</h1>
+    <div class="name" style="background-color: rgb(157, 177, 177);">
+        <h3 style="text-align: right;">
+            <small class="text-black" style="padding: 30px;">#<%=projectid%> <%= project.name%></small>
+        </h3>
+    </div>
+    <hr>
+    <div class="card">
+        <h5 class="card-header card text-white bg-dark mb-3">Add issues of projects</h5>
+        <div class="card-body">
+
+            <form method="POST" encType="multipart/form-data">
+                <fieldset class="form-group">
+                    <div class="row">
+                        <legend class="col-form-label col-sm-2 pt-0">Tracker</legend>
+                        <div class="col-sm-10">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="tracker" id="bug"
+                                    value="Bug">
+                                <label class="form-check-label" for="bug">
+                                    Bug
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="tracker"
+                                    id="feature" value="Feature">
+                                <label class="form-check-label" for="feature">
+                                    Feature
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="tracker"
+                                    id="support" value="Support">
+                                <label class="form-check-label" for="support">
+                                    Support
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="form-group row">
+                    <label for="subject" class="col-sm-2 col-form-label">Subject</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="subject" placeholder="Subject"
+                            name="subject">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="desc" class="col-sm-2 col-form-label">Description</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" id="desc" name="description"
+                            placeholder="Description"></textarea>
+                    </div>
+                </div>
+
+                <fieldset class="form-group">
+                    <div class="row">
+                        <legend class="col-form-label col-sm-2 pt-0">Status</legend>
+                        <div class="col-sm-10">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="status" id="new"
+                                    value="new">
+                                <label class="form-check-label" for="new">
+                                    New
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" disabled>
+                                <label class="form-check-label">
+                                    In Progress
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" disabled>
+                                <label class="form-check-label">
+                                    Resolved
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" disabled>
+                                <label class="form-check-label">
+                                    Feedback
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" disabled>
+                                <label class="form-check-label">
+                                    Closed
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" disabled>
+                                <label class="form-check-label">
+                                    Rejected
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="form-group">
+                    <div class="row">
+                        <legend class="col-form-label col-sm-2 pt-0">Priority</legend>
+                        <div class="col-sm-10">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="priority"
+                                    id="normal" value="normal">
+                                <label class="form-check-label" for="normal">
+                                    Normal
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="priority"
+                                    id="high" value="high">
+                                <label class="form-check-label" for="high">
+                                    High
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="priority"
+                                    id="urgent" value="urgent">
+                                <label class="form-check-label" for="urgent">
+                                    Urgent
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="priority"
+                                    id="immediate" value="immediate">
+                                <label class="form-check-label" for="immediate">
+                                    Immediate
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="form-group row">
+                    <label for="assignee" class="col-sm-2 col-form-label">
+                        Assignee</label>
+                    <div class="col-sm-10">
+                        <select class="custom-select" name="assignee" required="">
+
+                            <option>Choose the Assignee ...</option>
+                           <!-- smasmclcmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="startDate" class="col-sm-2 col-form-label">Start Date</label>
+                    <div class="col-sm-10">
+                        <input type="date" class="form-control" id="startDate" placeholder="Subject"
+                            name="startDate">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="dueDate" class="col-sm-2 col-form-label">Due Date</label>
+                    <div class="col-sm-10">
+                        <input type="date" class="form-control" id="dueDate" name="dueDate">
+                    </div>
+                </div>
+
+                <div class="form-group row ">
+                    <label for="estimatedTime" class="col-sm-2 col-form-label">Estimated Time
+                    </label>
+                    <div class="col-sm-4">
+                        <input type="number" class="form-control" id="estimatedTime"
+                            name="estimatedTime" placeholder="Estimated Time">
+                        <small id="estimatedTime" class="form-text text-muted">
+                            Insert Estimated Time by Hours
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="done" class="col-sm-2 col-form-label">
+                        Done</label>
+                    <div class="col-sm-10">
+                        <select class="custom-select" name="done" required="">
+                            <option>Choose the Percentage ...</option>
+                            <option value="0">0%</option>
+                            <option value="10">10%</option>
+                            <option value="20">20%</option>
+                            <option value="30">30%</option>
+                            <option value="40">40%</option>
+                            <option value="50">50%</option>
+                            <option value="60">60%</option>
+                            <option value="70">70%</option>
+                            <option value="80">80%</option>
+                            <option value="90">90%</option>
+                            <option value="100">100%</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="inputFile" class="col-sm-2 col-form-label">File</label>
+                    <div class="col-sm-10">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="inputFile" name="file">
+                            <label class="custom-file-label" for="inputFile">Choose file</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-outline-dark">Add</button>
+                        <a class="btn btn-outline-secondary" href="/projects/issues/<%=projectid%>"
+                            role="button">Back</a>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+      </div>
+</div>
+<%- include('../../partials/footer')%>

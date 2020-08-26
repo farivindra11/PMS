@@ -2,10 +2,10 @@
 <%- include('../../partials/sidebar')%>
 <div class="container">
     <!-- filter -->
-    <h1 class="card-title">Projects Members</h1>
+    <h1 class="card-title">Projects Issues</h1>
     <div class="name" style="background-color: rgb(157, 177, 177);">
         <h3 style="text-align: right;">
-            <small class="text-black" style="padding: 30px;">#<%=projectid%> <%=project.name%></small>
+            <small class="text-black" style="padding: 30px;">#<%=projectid%> <%= project.name%></small>
         </h3>
     </div>
     <hr>
@@ -154,9 +154,10 @@
                     </ul>
                 </nav>
                 <div class="add">
-                    <a class="btn btn-outline-primary" href="/add">Add Projects</a>
+                    <a class="btn btn-outline-primary" href="/projects/issues/<%= projectid %>/add">Add Issues</a>
                 </div>
             </div>
         </div>
     </div>
-    <%- include('../../partials/footer')%>
+</div>
+<%- include('../../partials/footer')%>

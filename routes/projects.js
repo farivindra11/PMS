@@ -19,9 +19,9 @@ let memberOptions = {
 }
 
 let issuesOptions = {
-  checkid : true,
-  checksubject : true,
-  checktracker : true
+  checkid: true,
+  checksubject: true,
+  checktracker: true
 }
 
 /* GET home page. */
@@ -533,7 +533,7 @@ module.exports = (db) => {
     const projectid = req.params.projectid
     let projectData = `SELECT * FROM projects WHERE projectid=${projectid}`
 
-    let { checkId, checkSubject, checkTracker, issuesId, issuesSubject, issuesTracker } = req.query;
+    const { checkId, checkSubject, checkTracker, issuesId, issuesSubject, issuesTracker } = req.query;
 
     let query = [];
     let search = ''
@@ -616,11 +616,57 @@ module.exports = (db) => {
 
   //add
   router.get('/issues/:projectid/add', helpers.isLoggedIn, function (req, res, next) {
-    res.render('projects/issues/add', { user: req.session.user })
+    const link = 'projects';
+    const url = 'issues';
+    const projectid = req.params.projectid
+
+    let projectData = `SELECT * FROM projects WHERE projectid=${projectid}`
+
+    db.query(projectData, (err, dataProject) => {
+      if (err) return res.send(err)
+
+      let project = dataProject.rows[0];
+
+      let memberData = `SELECT users.userid, CONCAT(users.firstname, ' ', users.lastname) AS fullname FROM members
+      LEFT JOIN users ON members.userid = users.userid WHERE projectid = ${projectid}`
+      db.query(memberData, (err, dataMember) => {
+        if (err) return res.send(err)
+
+        members = dataMember.rows;
+        
+        res.render('projects/issues/add', {
+          link,
+          url,
+          projectid,
+          project,
+          members,
+          user: req.session.user
+      })
+      })
+    })
   });
 
   router.post('/issues/:projectid/add', helpers.isLoggedIn, function (req, res, next) {
-    res.redirect(`/projects/issues/${req.params.projectid}`)
+    let projectid = parseInt(req.params.projectid)
+    let query = req.body;
+
+    let file = req.files.file;
+    let filename = file.name.toLowerCase().replace('', Date.now()).split(' ').join('-');
+    let addData = `INSERT INTO issues(projectid, tracker, subject, description, status, priority, assignee, startdate, duedate, estimatedtime, done, files, author, createddate)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, NOW())`
+    
+    let values = [projectid, query.tracker, query.subject, query.description, query.status, query.priority, parseInt(query.assignee), query.startdate,
+    query.duedate, parseInt(query.estimatedtime), parseInt(query.done), filename]
+
+    db.query(addData, values, (err) => {
+      if (err) return res.send(err)
+
+      file.mv(path.join(__dirname, '..', 'public', 'upload', 'filename'), (err) => {
+        if (err) return res.send(err)
+
+        res.redirect(`/projects/issues/${projectid}`)
+      })
+    })
   });
 
   // edit
