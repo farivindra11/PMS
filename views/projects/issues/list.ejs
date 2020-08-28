@@ -105,25 +105,25 @@
                         <thead class="thead-dark">
                             <tr>
                                 <th <%= option.checkid ? `` : `hidden` %>>ID</th>
-                                <th <%= option.checksubject ? `` : `hidden` %>>Subject</th>
                                 <th <%= option.checktracker ? `` : `hidden` %>>Tracker</th>
+                                <th <%= option.checksubject ? `` : `hidden` %>>Subject</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <% issues.forEach (item => {%>
                             <tr>
-                                <td <%= option.checkid ? `` : `hidden`%><%= item.issueid %></td>
-                                <td <%= option.checksubject ? `` : `hidden`%>><%= item.subject %></td>
+                                <td <%= option.checkid ? `` : `hidden`%>><%= item.issueid %>.</td>
                                 <td <%= option.checktracker ? `` : `hidden`%>>
                                     <%if(item.tracker == 'Bug'){%>
                                     <h5><span class="badge badge-pill badge-warning"><%= item.tracker %></span></h5>
                                     <%} else if(item.tracker == 'Feature'){%>
-                                    <h5><span class="badge badge-pill badge-succes"><%= item.tracker %></span></h5>
+                                    <h5><span class="badge badge-pill badge-primary"><%= item.tracker %></span></h5>
                                     <%}else{%>
                                     <h5><span class="badge badge-pill badge-info"><%= item.tracker %></span></h5>
                                     <%}%>
                                 </td>
+                                <td <%= option.checksubject ? `` : `hidden`%>><%= item.subject %></td>
                                 <td>
                                 <a href="#">
                                     <button type="button" class="btn btn-outline-success">Edit</button>
@@ -140,16 +140,27 @@
                 </div>
                 <nav aria-label="Page navigation example">
                     <ul class="pagination">
-                        <li class="page-item <%= page==1 ? 'disabled' : '' %>"><a class="page-link"
-                                href="/projects<%= url.replace(`?page=${parseInt(page)}`, `?page=${ parseInt(page) - 1}`) %>">Previous</a>
+                        <li class="page-item <%= page <= 1 ? 'disabled' : '' %>">
+                            <a class="page-link"
+                                href="/projects<%= pageUrl.replace(`page=${parseInt(page)}`, `page=${(parseInt(page) - 1)}`) %>"
+                                aria-label="Previous">
+                                Previous
+                            </a>
                         </li>
-                        <%for (let i=1; i <= pages; i++ ){%>
-                        <li class="page-item <%= (i == page) ? 'active' : '' %> "><a class="page-link"
-                                href="/projects<%= url.replace(`?page=${parseInt(page)}`,`?page=${i}`) %>"><%= i %></a>
+                        <% for (let i = 1; i <= pages; i++) { %>
+                        <li class="page-item <%= page == i ? 'active' : '' %>">
+                            <a class="page-link"
+                                href="/projects<%= pageUrl.replace(`page=${parseInt(page)}`, `page=${i}`) %>">
+                                <%= i %>
+                            </a>
                         </li>
-                        <%}%>
-                          <li class="page-item <%= page==pages ? 'disabled' : '' %>"> <a class="page-link disabled"
-                            href="/projects<%= url.replace(`?page=${parseInt(page)}`,`?page=${parseInt(page) + 1}`) %>">Next</a>
+                        <% } %>
+                        <li class="page-item <%= page >= pages ? 'disabled' : '' %>">
+                            <a class="page-link"
+                                href="/projects<%= pageUrl.replace(`page=${parseInt(page)}`, `page=${(parseInt(page) + 1)}`) %>"
+                                aria-label="Next">
+                                Next
+                            </a>
                         </li>
                     </ul>
                 </nav>
