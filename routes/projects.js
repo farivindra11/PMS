@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var helpers = require('../helpers/util');
 var moment = require('moment');
+var path = require('path');
 
 
 
@@ -562,7 +563,7 @@ module.exports = (db) => {
 
         let total = totalData.rows[0].total;
 
-        const urlPage = req.url == `/issues${projectid}/` ? `/issues/${projectid}/?page=1` : req.url;
+        const pageUrl = req.url == `/issues/${projectid}` ? `/issues/${projectid}/?page=1` : req.url;
         const page = req.query.page || 1
         const limit = 3;
         const offset = (page - 1) * limit;
@@ -590,7 +591,7 @@ module.exports = (db) => {
               url,
               projectid,
               project,
-              urlPage,
+              pageUrl,
               page,
               pages,
               issues,
@@ -610,7 +611,7 @@ module.exports = (db) => {
       issuesOptions.checksubject = req.body.checksubject
       issuesOptions.checktracker = req.body.checktracker
 
-      res.redirect(`/issues/${projectid}`)
+      res.redirect(`/projects/issues/${projectid}`)
     })
   });
 
@@ -633,7 +634,7 @@ module.exports = (db) => {
         if (err) return res.send(err)
 
         members = dataMember.rows;
-        
+
         res.render('projects/issues/add', {
           link,
           url,
@@ -641,7 +642,7 @@ module.exports = (db) => {
           project,
           members,
           user: req.session.user
-      })
+        })
       })
     })
   });
@@ -649,14 +650,16 @@ module.exports = (db) => {
   router.post('/issues/:projectid/add', helpers.isLoggedIn, function (req, res, next) {
     let projectid = parseInt(req.params.projectid)
     let query = req.body;
+    let user = req.session.user
 
     let file = req.files.file;
     let filename = file.name.toLowerCase().replace('', Date.now()).split(' ').join('-');
-    let addData = `INSERT INTO issues(projectid, tracker, subject, description, status, priority, assignee, startdate, duedate, estimatedtime, done, files, author, createddate)
+    let addData = `INSERT INTO issues(projectid, tracker, subject, description, status, priority,
+      assignee, startdate, duedate, estimatedtime, done, files, author, createddate)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, NOW())`
-    
+
     let values = [projectid, query.tracker, query.subject, query.description, query.status, query.priority, parseInt(query.assignee), query.startdate,
-    query.duedate, parseInt(query.estimatedtime), parseInt(query.done), filename]
+      query.duedate, parseInt(query.estimatedtime), parseInt(query.done), filename, user.userid]
 
     db.query(addData, values, (err) => {
       if (err) return res.send(err)
