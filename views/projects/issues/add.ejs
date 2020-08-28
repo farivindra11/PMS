@@ -146,7 +146,9 @@
                         <select class="custom-select" name="assignee" required="">
 
                             <option>Choose the Assignee ...</option>
-                           <!-- smasmclcmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa -->
+                            <% members.forEach(item =>{ %>
+                                <option value="<%=item.userid%>"> <%=item.fullname%></option>
+                                <%})%>
                         </select>
                     </div>
                 </div>
