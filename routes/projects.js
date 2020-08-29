@@ -682,8 +682,16 @@ module.exports = (db) => {
   });
 
   // delete
-  router.get('/issues/:projectid/delete/:memberid', helpers.isLoggedIn, function (req, res, next) {
-    res.redirect(`/projects/issues/${req.params.projectid}`)
+  router.get('/issues/:projectid/delete/:id', helpers.isLoggedIn, function (req, res, next) {
+    let projectid = req.params.projectid
+    let issueid = req.params.id
+
+    let deleteIssue = `DELETE FROM issues WHERE projectid = $1 AND issueid = $2`
+    db.query(deleteIssue, [projectid, issueid], (err) => {
+      if (err) return res.send(err)
+
+      res.redirect(`/projects/issues/${projectid}`)
+    })
   });
   // End issues
 
