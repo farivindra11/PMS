@@ -118,14 +118,14 @@
                                     <%if(item.tracker == 'Bug'){%>
                                     <h5><span class="badge badge-pill badge-warning"><%= item.tracker %></span></h5>
                                     <%} else if(item.tracker == 'Feature'){%>
-                                    <h5><span class="badge badge-pill badge-primary"><%= item.tracker %></span></h5>
+                                    <h5><span class="badge badge-pill badge-success"><%= item.tracker %></span></h5>
                                     <%}else{%>
                                     <h5><span class="badge badge-pill badge-info"><%= item.tracker %></span></h5>
                                     <%}%>
                                 </td>
                                 <td <%= option.checksubject ? `` : `hidden`%>><%= item.subject %></td>
                                 <td>
-                                <a href="#">
+                                <a href="/projects/issues/<%= projectid %>/edit/<%=item.issueid%>">
                                     <button type="button" class="btn btn-outline-success">Edit</button>
                                     </a>
                                     <a href="/projects/issues/<%= projectid %>/delete/<%=item.issueid%>">
