@@ -673,8 +673,53 @@ module.exports = (db) => {
   });
 
   // edit
-  router.get('/issues/:projectid/edit/:memberid', helpers.isLoggedIn, function (req, res, next) {
-    res.render('projects/issues/edit', { user: req.session.user })
+  router.get('/issues/:projectid/edit/:id', helpers.isLoggedIn, function (req, res, next) {
+    const link = 'projects';
+    const url = 'issues';
+    const projectid = req.params.projectid;
+    const issueId = req.params.id;
+
+    let projectData = `SELECT * FROM projects WHERE projectid=${projectid}`
+    db.query(projectData, (err, dataProject) => {
+      if (err) return res.send(err)
+
+      let project = dataProject.rows[0];
+
+      let issueData = `SELECT issues.*, CONCAT(users.firstname,' ',users.lastname) AS authorname FROM issues
+      LEFT JOIN users ON issues.author=users.userid WHERE projectid=${projectid} AND issueid=${issueId}`
+      db.query(issueData, (err, dataIssues) => {
+        if (err) return res.send(err)
+
+        let issue = dataIssues.rows[0];
+
+        let memberData = `SELECT users.userid, CONCAT(users.firstname,' ',users.lastname) AS fullname FROM members
+        LEFT JOIN users ON members.userid = users.userid WHERE projectid=${projectid}`
+        db.query(memberData, (err, dataMember) => {
+          if (err) return res.send(err)
+
+          let member = dataMember.rows;
+
+          let parentData = `SELECT subject, tracker FROM issues WHERE projectid=${projectid}`
+          db.query(parentData, (err, dataParent) => {
+            if (err) return res.send(err)
+
+            let parent = dataParent.rows;
+
+
+            res.render('projects/issues/edit', {
+              link,
+              url,
+              projectid,
+              project,
+              issue,
+              member,
+              parent,
+              user: req.session.user
+            })
+          })
+        })
+      })
+    })
   });
 
   router.post('/issues/:projectid/edit/:memberid', helpers.isLoggedIn, function (req, res, next) {
