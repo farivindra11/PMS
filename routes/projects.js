@@ -336,9 +336,23 @@ module.exports = (db) => {
 
   // Activity
   router.get('/activity/:projectid', helpers.isLoggedIn, function (req, res, next) {
+    const link = 'projects';
+    const url = 'activity';
+    const projectid = req.params.projectid;
 
+    let projectData = `SELECT * FROM projects WHERE projectid= ${projectid}`
+    db.query(projectData, (err, dataProject) => {
+      if (err) return res.send(err)
 
-    res.render('projects/activity/view', { user: req.session.user })
+      let project = dataProject.rows[0]
+      res.render('projects/activity/view', {
+        link,
+        url,
+        projectid,
+        project,
+        user: req.session.user
+      })
+    })
   });
 
 
@@ -740,7 +754,7 @@ module.exports = (db) => {
     const projectid = parseInt(req.params.projectid);
     const issueid = parseInt(req.params.id);
     const queryForm = req.body;
-    
+
     if (req.files) {
       let file = req.files.file;
       let fileName = file.name.toLowerCase().replace("", Date.now()).split(" ").join("-");
