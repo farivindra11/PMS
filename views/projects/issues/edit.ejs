@@ -13,8 +13,6 @@
         <div class="card-body">
 
             <form method="POST" encType="multipart/form-data">
-                <input type="hidden" name="olddone" value="<%=issue.done%>">
-                <input type="hidden" name="oldspent" value="<%=issue.spenttime == null ? '0' : issue.spenttime%>">
                 <fieldset class="form-group">
                     <div class="row">
                         <legend class="col-form-label col-sm-2 pt-0">Tracker</legend>
@@ -163,7 +161,7 @@
                 <div class="form-group row">
                     <label for="startDate" class="col-sm-2 col-form-label">Start Date</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control" id="startDate" name="startdate"
+                        <input type="date" class="form-control" id="startDate" name="startDate"
                             value="<%= moment(issue.startdate).format('YYYY-MM-DD')%>">
                     </div>
                 </div>
@@ -171,7 +169,7 @@
                 <div class="form-group row">
                     <label for="dueDate" class="col-sm-2 col-form-label">Due Date</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control" id="dueDate" name="duedate"
+                        <input type="date" class="form-control" id="dueDate" name="dueDate"
                             value="<%= moment(issue.duedate).format('YYYY-MM-DD')%>">
                     </div>
                 </div>
@@ -180,7 +178,7 @@
                     <label for="estimatedTime" class="col-sm-2 col-form-label">Estimated Time
                     </label>
                     <div class="col-sm-4">
-                        <input type="number" class="form-control" id="estimatedTime" name="estimatedtime"
+                        <input type="number" class="form-control" id="estimatedTime" name="estimatedTime"
                             value="<%= issue.estimatedtime %>" placeholder="Estimated Time" disabled>
                         <small id="estimatedTime" class="form-text text-muted">
                             Insert Estimated Time by Hours
@@ -210,20 +208,66 @@
                 </div>
 
                 <div class="form-group row">
+                    <label for="parenttask" class="col-sm-2 col-form-label">
+                        Perent Task</label>
+                    <div class="col-sm-10">
+                        <select class="custom-select" name="parenttask" required>
+                            <option value="" selected disabled>Choose the Perent Task ...</option>
+                            <% parent.forEach(item =>{%>
+                            <option value="<%=item.issueid%>">
+                                <%=item.subject%>(<%=item.tracker%>)
+                            </option>
+                            <%})%>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row ">
+                    <label for="spenttime" class="col-sm-2 col-form-label">Spent Time
+                    </label>
+                    <div class="col-sm-4">
+                        <input type="number" class="form-control" id="spenttime" name="spenttime"
+                            placeholder="Spent Time" value="<%=issue.spenttime%>" required>
+                        <small id="spenttime" class="form-text text-muted">
+                            Insert Spent Time by Hours
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="target" class="col-sm-2 col-form-label">Target Version</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="target" name="target"
+                            placeholder="ex: version 1.0" value="<%=issue.targetversion%>" required>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="author" class="col-sm-2 col-form-label">Author</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="author" name="authorname"
+                            value="<%=issue.authorname%>" disabled>
+                    </div>
+                </div>
+
+                <div class="form-group row">
                     <label for="inputFile" class="col-sm-2 col-form-label">File</label>
                     <div class="col-sm-10">
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="inputFile" name="file">
-                            <label class="custom-file-label" for="inputFile">Choose file</label>
+                            <label class="custom-file-label" for="inputFile">
+                                <%= issue.files ? 'Change file ...' : 'Choose file ...' %>
+                            </label>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <div class="col-sm-10">
-                        <button type="submit" class="btn btn-outline-dark">Add</button>
-                        <a class="btn btn-outline-secondary" href="/projects/issues/<%=projectid%>"
-                            role="button">Back</a>
+                        <button type="submit" class="btn btn-outline-dark">save</button>
+                        <a class="btn btn-outline-secondary" href="/projects/issues/<%=projectid%>"role="button">
+                            Back
+                        </a>
                     </div>
                 </div>
 
