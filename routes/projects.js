@@ -654,18 +654,18 @@ module.exports = (db) => {
 
     if (req.files) {                  // with file
       let file = req.files.file;
-      let filename = file.name.toLowerCase().replace('', Date.now()).split(' ').join('-');
+      let fileName = file.name.toLowerCase().replace('', Date.now()).split(' ').join('-');
       let addData = `INSERT INTO issues(projectid, tracker, subject, description, status, priority,
       assignee, startdate, duedate, estimatedtime, done, files, author, createddate)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, NOW())`
 
-      let values = [projectid, query.tracker, query.subject, query.description, query.status, query.priority, parseInt(query.assignee), query.startdate,
-        query.duedate, parseInt(query.estimatedtime), parseInt(query.done), filename, user.userid]
+      let values = [projectid, query.tracker, query.subject, query.description, query.status, query.priority, parseInt(query.assignee), query.startDate,
+        query.dueDate, parseInt(query.estimatedTime), parseInt(query.done), fileName, user.userid]
       // console.log(values);
       db.query(addData, values, (err) => {
         if (err) return res.send(err)
 
-        file.mv(path.join(__dirname, '..', 'public', 'upload', 'filename'), (err) => {
+        file.mv(path.join(__dirname, '..', 'public', 'upload', fileName), function (err) {
           if (err) return res.send(err)
 
           res.redirect(`/projects/issues/${projectid}`)
@@ -675,7 +675,7 @@ module.exports = (db) => {
       let addData = `INSERT INTO issues(projectid, tracker, subject, description, status, priority, assignee, startdate, duedate, estimatedtime, done, author, createddate)
       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW())`
       let values = [projectid, query.tracker, query.subject, query.description, query.status, query.priority,
-      parseInt(query.assignee), query.startDate, query.dueDate, parseInt(query.estimatedTime), parseInt(query.done), user.userid]
+        parseInt(query.assignee), query.startDate, query.dueDate, parseInt(query.estimatedTime), parseInt(query.done), user.userid]
 
       db.query(addData, values, (err) => {
         if (err) return res.send(err)
@@ -704,7 +704,7 @@ module.exports = (db) => {
         if (err) return res.send(err)
 
         let issue = dataIssues.rows[0];
-
+        // console.log(issue);
         let memberData = `SELECT users.userid, CONCAT(users.firstname,' ',users.lastname) AS fullname FROM members
         LEFT JOIN users ON members.userid = users.userid WHERE projectid=${projectid}`
         db.query(memberData, (err, dataMember) => {
@@ -712,12 +712,12 @@ module.exports = (db) => {
 
           let member = dataMember.rows;
 
-          let parentData = `SELECT subject, tracker FROM issues WHERE projectid=${projectid}`
+          let parentData = `SELECT subject, tracker, issueid FROM issues WHERE projectid=${projectid}`
           db.query(parentData, (err, dataParent) => {
             if (err) return res.send(err)
 
             let parent = dataParent.rows;
-
+            // console.log(parent);
 
             res.render('projects/issues/edit', {
               link,
@@ -738,12 +738,36 @@ module.exports = (db) => {
 
   router.post('/issues/:projectid/edit/:id', helpers.isLoggedIn, function (req, res, next) {
     const projectid = parseInt(req.params.projectid);
-    const issueId = parseInt(req.params.id);
+    const issueid = parseInt(req.params.id);
     const queryForm = req.body;
-    const user = req.session.user
-
     
-    res.redirect(`/projects/issues/${req.params.projectid}`)
+    if (req.files) {
+      let file = req.files.file;
+      let fileName = file.name.toLowerCase().replace("", Date.now()).split(" ").join("-");
+      let dataUpdate = `UPDATE issues SET subject = $1, description = $2, status = $3, priority = $4, assignee = $5, duedate = $6, done = $7, parenttask = $8, spenttime = $9, targetversion = $10, files = $11, updateddate = $12 ${queryForm.status == 'closed' ? `, closeddate = NOW() ` : " "}WHERE issueid = $13`
+      let values = [queryForm.subject, queryForm.description, queryForm.status, queryForm.priority, parseInt(queryForm.assignee),
+      queryForm.dueDate, parseInt(queryForm.done), queryForm.parenttask, parseInt(queryForm.spenttime), queryForm.target, fileName, 'NOW()', issueid]
+
+      db.query(dataUpdate, values, (err) => {
+        if (err) return res.send(err)
+
+        file.mv(path.join(__dirname, '..', 'public', 'upload', fileName), function (err) {
+          if (err) return res.send(err)
+
+          res.redirect(`/projects/issues/${projectid}`)
+        })
+      })
+    } else {
+      let updateData = `UPDATE issues SET subject = $1, description = $2, status = $3, priority = $4, assignee = $5, duedate = $6, done = $7, parenttask = $8, spenttime = $9, targetversion = $10, updateddate = $11 ${queryForm.status == 'closed' ? `, closeddate = NOW() ` : " "}WHERE issueid = $12`
+      let values = [queryForm.subject, queryForm.description, queryForm.status, queryForm.priority, parseInt(queryForm.assignee), queryForm.dueDate, parseInt(queryForm.done), queryForm.parenttask, parseInt(queryForm.spenttime), queryForm.target, 'NOW()', issueid]
+
+      db.query(updateData, values, (err) => {
+        // console.log(values);
+        if (err) return res.send(err)
+
+        res.redirect(`/projects/issues/${projectid}`)
+      })
+    }
   });
 
   // delete
