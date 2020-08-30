@@ -652,24 +652,37 @@ module.exports = (db) => {
     let query = req.body;
     let user = req.session.user
 
-    let file = req.files.file;
-    let filename = file.name.toLowerCase().replace('', Date.now()).split(' ').join('-');
-    let addData = `INSERT INTO issues(projectid, tracker, subject, description, status, priority,
+    if (req.files) {                  // with file
+      let file = req.files.file;
+      let filename = file.name.toLowerCase().replace('', Date.now()).split(' ').join('-');
+      let addData = `INSERT INTO issues(projectid, tracker, subject, description, status, priority,
       assignee, startdate, duedate, estimatedtime, done, files, author, createddate)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, NOW())`
 
-    let values = [projectid, query.tracker, query.subject, query.description, query.status, query.priority, parseInt(query.assignee), query.startdate,
-      query.duedate, parseInt(query.estimatedtime), parseInt(query.done), filename, user.userid]
+      let values = [projectid, query.tracker, query.subject, query.description, query.status, query.priority, parseInt(query.assignee), query.startdate,
+        query.duedate, parseInt(query.estimatedtime), parseInt(query.done), filename, user.userid]
+      // console.log(values);
+      db.query(addData, values, (err) => {
+        if (err) return res.send(err)
 
-    db.query(addData, values, (err) => {
-      if (err) return res.send(err)
+        file.mv(path.join(__dirname, '..', 'public', 'upload', 'filename'), (err) => {
+          if (err) return res.send(err)
 
-      file.mv(path.join(__dirname, '..', 'public', 'upload', 'filename'), (err) => {
+          res.redirect(`/projects/issues/${projectid}`)
+        })
+      })
+    } else {
+      let addData = `INSERT INTO issues(projectid, tracker, subject, description, status, priority, assignee, startdate, duedate, estimatedtime, done, author, createddate)
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW())`
+      let values = [projectid, query.tracker, query.subject, query.description, query.status, query.priority,
+      parseInt(query.assignee), query.startDate, query.dueDate, parseInt(query.estimatedTime), parseInt(query.done), user.userid]
+
+      db.query(addData, values, (err) => {
         if (err) return res.send(err)
 
         res.redirect(`/projects/issues/${projectid}`)
       })
-    })
+    }
   });
 
   // edit
@@ -713,6 +726,7 @@ module.exports = (db) => {
               project,
               issue,
               member,
+              moment,
               parent,
               user: req.session.user
             })
@@ -722,7 +736,13 @@ module.exports = (db) => {
     })
   });
 
-  router.post('/issues/:projectid/edit/:memberid', helpers.isLoggedIn, function (req, res, next) {
+  router.post('/issues/:projectid/edit/:id', helpers.isLoggedIn, function (req, res, next) {
+    const projectid = parseInt(req.params.projectid);
+    const issueId = parseInt(req.params.id);
+    const queryForm = req.body;
+    const user = req.session.user
+
+    
     res.redirect(`/projects/issues/${req.params.projectid}`)
   });
 
