@@ -345,12 +345,39 @@ module.exports = (db) => {
       if (err) return res.send(err)
 
       let project = dataProject.rows[0]
-      res.render('projects/activity/view', {
-        link,
-        url,
-        projectid,
-        project,
-        user: req.session.user
+      let sqlActivity = `SELECT activity.*, CONCAT(users.firstname,' ',users.lastname) AS authorname,
+      (time AT TIME ZONE 'Asia/Jakarta'):: time AS timeactivity, 
+      (time AT TIME ZONE 'Asia/Jakarta'):: date AS dateactivity
+      FROM activity
+      LEFT JOIN users ON activity.author = users.userid WHERE projectid= ${projectid} 
+      ORDER BY dateactivity DESC, timeactivity DESC`
+
+      db.query(sqlActivity, (err, dataActivity) => {
+        if (err) return res.send(err)
+
+        let activity = dataActivity.rows
+
+        activity.forEach(item => {
+          item.dateactivity = moment(item.dateactivity).format('YYYY-MM-DD');
+          item.timeactivity = moment(item.timeactivity, 'HH:mm:ss.SSS').format('HH:mm:ss');
+
+          if (item.dataActivity == moment().format('YYYY-MM-DD')) {
+            item.dateactivity = 'Today'
+          } else if (item.dataActivity == moment().substract(1, 'days').format('YYYY-MM-DD')) {
+            item.dateactivity = 'Yesterday'
+          } else {
+            item.dateactivity = moment(item.dateactivity).format('MMMM Do, YYYY')
+          }
+        })
+        res.render('projects/activity/view', {
+          link,
+          url,
+          projectid,
+          project,
+          moment,
+          activity,
+          user: req.session.user
+      })
       })
     })
   });
@@ -754,6 +781,13 @@ module.exports = (db) => {
     const projectid = parseInt(req.params.projectid);
     const issueid = parseInt(req.params.id);
     const queryForm = req.body;
+    const user = req.session.user;
+
+    let title = `${queryForm.subject} #${issueid} (${queryForm.tracker}) - [${queryForm.status}]`
+    let desc = `Spent Time by Hours : from ${queryForm.oldspent} updated to ${queryForm.spenttime}`
+    let dataActivity = `INSERT INTO activity (time, title, description, author, projectid, olddone, nowdone) 
+    VALUES(NOW(), $1, $2, $3, $4, $5, $6)`
+    let value = [title, desc, user.userid, projectid, queryForm.olddone, queryForm.done]
 
     if (req.files) {
       let file = req.files.file;
@@ -768,7 +802,11 @@ module.exports = (db) => {
         file.mv(path.join(__dirname, '..', 'public', 'upload', fileName), function (err) {
           if (err) return res.send(err)
 
-          res.redirect(`/projects/issues/${projectid}`)
+          db.query(dataActivity, value, (err) => {
+            if (err) return res.send(err)
+
+            res.redirect(`/projects/issues/${projectid}`)
+          })
         })
       })
     } else {
@@ -779,7 +817,11 @@ module.exports = (db) => {
         // console.log(values);
         if (err) return res.send(err)
 
-        res.redirect(`/projects/issues/${projectid}`)
+        db.query(dataActivity, values, (err) => {
+          if (err) return res.send(err)
+
+          res.redirect(`/projects/issues/${projectid}`)
+        })
       })
     }
   });
