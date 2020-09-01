@@ -353,20 +353,21 @@ module.exports = (db) => {
       ORDER BY dateactivity DESC, timeactivity DESC`
 
       db.query(sqlActivity, (err, dataActivity) => {
+        console.log(dataActivity);
         if (err) return res.send(err)
 
-        let activity = dataActivity.rows
+        let activity = dataActivity.rows;
 
         activity.forEach(item => {
           item.dateactivity = moment(item.dateactivity).format('YYYY-MM-DD');
           item.timeactivity = moment(item.timeactivity, 'HH:mm:ss.SSS').format('HH:mm:ss');
 
-          if (item.dataActivity == moment().format('YYYY-MM-DD')) {
+          if (item.dateactivity == moment().format('YYYY-MM-DD')) {
             item.dateactivity = 'Today'
-          } else if (item.dataActivity == moment().substract(1, 'days').format('YYYY-MM-DD')) {
+          } else if (item.dateactivity == moment().subtract(1, 'days').format('YYYY-MM-DD')) {
             item.dateactivity = 'Yesterday'
           } else {
-            item.dateactivity = moment(item.dateactivity).format('MMMM Do, YYYY')
+            item.dateactivity = moment(item.dateactivity).format("MMMM Do, YYYY")
           }
         })
         res.render('projects/activity/view', {
@@ -377,7 +378,7 @@ module.exports = (db) => {
           moment,
           activity,
           user: req.session.user
-      })
+        })
       })
     })
   });
@@ -785,8 +786,7 @@ module.exports = (db) => {
 
     let title = `${queryForm.subject} #${issueid} (${queryForm.tracker}) - [${queryForm.status}]`
     let desc = `Spent Time by Hours : from ${queryForm.oldspent} updated to ${queryForm.spenttime}`
-    let dataActivity = `INSERT INTO activity (time, title, description, author, projectid, olddone, nowdone) 
-    VALUES(NOW(), $1, $2, $3, $4, $5, $6)`
+    let dataActivity = `INSERT INTO activity (time, title, description, author, projectid, olddone, nowdone) VALUES (NOW(), $1, $2, $3, $4, $5, $6)`
     let value = [title, desc, user.userid, projectid, queryForm.olddone, queryForm.done]
 
     if (req.files) {
@@ -817,7 +817,10 @@ module.exports = (db) => {
         // console.log(values);
         if (err) return res.send(err)
 
-        db.query(dataActivity, values, (err) => {
+        db.query(dataActivity, value, (err) => {
+          // console.log(err);
+          // console.log(dataActivity);
+          // console.log(value);
           if (err) return res.send(err)
 
           res.redirect(`/projects/issues/${projectid}`)
