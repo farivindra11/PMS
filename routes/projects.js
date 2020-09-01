@@ -278,62 +278,63 @@ module.exports = (db) => {
       db.query(dataMember, (err, memberData) => {
         if (err) return res.send(err)
 
-    //     let dataIssues = `SELECT tracker, status FROM issues WHERE projectid = ${projectid}`
-    //     db.query(dataIssues, (err, issuesData) => {
-    //       if (err) return res.send(err)
+        let members = memberData.rows;
+        let dataIssues = `SELECT tracker, status FROM issues WHERE projectid = ${projectid}`
+        db.query(dataIssues, (err, issuesData) => {
+          if (err) return res.send(err)
 
-    //       let bugOpen = 0;
-    //       let bugTotal = 0;
-    //       let featureOpen = 0;
-    //       let featureTotal = 0;
-    //       let supportOpen = 0;
-    //       let supportTotal = 0;
+          let bugOpen = 0;
+          let bugTotal = 0;
+          let featureOpen = 0;
+          let featureTotal = 0;
+          let supportOpen = 0;
+          let supportTotal = 0;
 
-    //       issuesData.rows.forEach(item => {
-    //         if (item.tracker == 'Bug' && item.status !== "closed") {
-    //           bugOpen += 1
-    //         }
-    //         if (item.tracker == 'Bug') {
-    //           bugTotal += 1
-    //         }
-    //       })
+          issuesData.rows.forEach(item => {
+            if (item.tracker == 'Bug' && item.status !== "closed") {
+              bugOpen += 1
+            }
+            if (item.tracker == 'Bug') {
+              bugTotal += 1
+            }
+          })
 
-    //       issuesData.rows.forEach(item => {
-    //         if (item.tracker == 'Feature' && item.status !== "closed") {
-    //           featureOpen += 1
-    //         }
-    //         if (item.tracker == 'Feature') {
-    //           featureTotal += 1
-    //         }
-    //       })
+          issuesData.rows.forEach(item => {
+            if (item.tracker == 'Feature' && item.status !== "closed") {
+              featureOpen += 1
+            }
+            if (item.tracker == 'Feature') {
+              featureTotal += 1
+            }
+          })
 
-    //       issuesData.rows.forEach(item => {
-    //         if (item.tracker == 'Support' && item.status !== "closed") {
-    //           supportOpen += 1
-    //         }
-    //         if (item.tracker == 'Support') {
-    //           supportTotal += 1
-    //         }
-          // })
+          issuesData.rows.forEach(item => {
+            if (item.tracker == 'Support' && item.status !== "closed") {
+              supportOpen += 1
+            }
+            if (item.tracker == 'Support') {
+              supportTotal += 1
+            }
+          })
 
-    res.render('projects/overview/view', {
-      link,
-      user,
-      url,
-      projectid,
-      project,
-      members: memberData.rows,
-      // bugOpen,
-      // bugTotal,
-      // featureOpen,
-      // featureTotal,
-      // supportOpen,
-      // supportTotal
-    })
-  })
+          res.render('projects/overview/view', {
+            link,
+            user,
+            url,
+            projectid,
+            project,
+            members,
+            bugOpen,
+            bugTotal,
+            featureOpen,
+            featureTotal,
+            supportOpen,
+            supportTotal
+          })
+        })
       })
     })
-  // });
+  });
 
   // Activity
   router.get('/activity/:projectid', helpers.isLoggedIn, function (req, res, next) {
@@ -354,7 +355,6 @@ module.exports = (db) => {
       ORDER BY dateactivity DESC, timeactivity DESC`
 
       db.query(sqlActivity, (err, dataActivity) => {
-        console.log(dataActivity);
         if (err) return res.send(err)
 
         let activity = dataActivity.rows;
