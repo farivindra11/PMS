@@ -1,24 +1,12 @@
 <%- include('../../partials/header')%>
-
-<div class="containers">
-    <%- include('../../partials/sidebar')%>
-<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-    <h1>Overview</h1>
-    
-
-</main>
-</div>
-
-<%- include('../../partials/footer')%>
-
-    <!-- <div class="containers" style="display: flex;"> -->
-        <!-- <aside style="background-color: red;">
-           
-          </aside>  
-          <div class="container">
-              <h1>Overview</h1>
-          <div class="container contable">
-            <h3 class="card-title">Options</h3>
-        </div>
+<%- include('../../partials/sidebar')%>
+<div class="container">
+    <h1 class="card-title">Overview</h1>
+    <div class="name" style="background-color: rgb(157, 177, 177);">
+        <h3 style="text-align: right;">
+            <small class="text-black" style="padding: 30px;">#<%=projectid%> <%= project.name%></small>
+        </h3>
     </div>
-    </div>  -->
+    <hr>
+</div>
+<%- include('../../partials/footer')%>
