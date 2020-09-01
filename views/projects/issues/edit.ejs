@@ -13,6 +13,9 @@
         <div class="card-body">
 
             <form method="POST" encType="multipart/form-data">
+                <input type="hidden" name="olddone" value="<%=issue.done%>">
+                <input type="hidden" name="oldspent" value="<%=issue.spenttime == null ? '0' : issue.spenttime%>">
+
                 <fieldset class="form-group">
                     <div class="row">
                         <legend class="col-form-label col-sm-2 pt-0">Tracker</legend>
@@ -237,8 +240,8 @@
                 <div class="form-group row">
                     <label for="target" class="col-sm-2 col-form-label">Target Version</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="target" name="target"
-                            placeholder="ex: version 1.0" value="<%=issue.targetversion%>" required>
+                        <input type="text" class="form-control" id="target" name="target" placeholder="ex: version 1.0"
+                            value="<%=issue.targetversion%>" required>
                     </div>
                 </div>
 
@@ -265,7 +268,7 @@
                 <div class="form-group row">
                     <div class="col-sm-10">
                         <button type="submit" class="btn btn-outline-dark">save</button>
-                        <a class="btn btn-outline-secondary" href="/projects/issues/<%=projectid%>"role="button">
+                        <a class="btn btn-outline-secondary" href="/projects/issues/<%=projectid%>" role="button">
                             Back
                         </a>
                     </div>
