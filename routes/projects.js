@@ -268,14 +268,15 @@ module.exports = (db) => {
     const projectid = req.params.projectid
     const user = req.session.user
 
-    // let dataProject = `SELECT * FROM project WHERE projectid = ${projectid}`
-    // db.query(dataProject, (err, projectData) => {
-    //   if (err) return res.send(err)
+    let dataProject = `SELECT * FROM projects WHERE projectid = ${projectid}`
+    db.query(dataProject, (err, projectData) => {
+      if (err) return res.send(err)
 
-    //   let dataMember = `SELECT users.firstname, users.lastname, members.role FROM members
-    //   LEFT JOIN users ON members.userid = users.userid WHERE members.projectid = ${projectid}`
-    //   db.query(dataMember, (err, memberData) => {
-    //     if (err) return res.send(err)
+      let project = projectData.rows[0];
+      let dataMember = `SELECT users.firstname, users.lastname, members.role FROM members
+      LEFT JOIN users ON members.userid = users.userid WHERE members.projectid = ${projectid}`
+      db.query(dataMember, (err, memberData) => {
+        if (err) return res.send(err)
 
     //     let dataIssues = `SELECT tracker, status FROM issues WHERE projectid = ${projectid}`
     //     db.query(dataIssues, (err, issuesData) => {
@@ -313,15 +314,15 @@ module.exports = (db) => {
     //         if (item.tracker == 'Support') {
     //           supportTotal += 1
     //         }
-    //       })
+          // })
 
     res.render('projects/overview/view', {
       link,
       user,
       url,
-      projectid
-      // data: projectData.rows[0],
-      // members: memberData.rows,
+      projectid,
+      project,
+      members: memberData.rows,
       // bugOpen,
       // bugTotal,
       // featureOpen,
@@ -330,8 +331,8 @@ module.exports = (db) => {
       // supportTotal
     })
   })
-  //     })
-  //   })
+      })
+    })
   // });
 
   // Activity
