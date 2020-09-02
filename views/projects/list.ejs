@@ -63,7 +63,7 @@
                                 <a href="/projects/edit/<%= item.projectid %>">
                                     <button type="button" class="btn btn-outline-success">Edit</button>
                                 </a>
-                                <a href="/projects/delete/<%= item.projectid %>">
+                                <a href="/projects/delete/<%= item.projectid %>" <%= user.role == 'User' ? 'hidden' : '' %>>
                                     <button type="button" class="btn btn-outline-danger"
                                         onclick="javascript: return confirm('Yakin data akan dihapus?')">Delete</button>
                                 </a>
