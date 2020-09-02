@@ -76,6 +76,16 @@ module.exports = (db) => {
       })
     })
   });
+  router.post('/', helpers.isLoggedIn, function (req, res) {
+    checkOption.Id = req.body.cId
+    checkOption.Name = req.body.cName
+    checkOption.Position = req.body.cPosition
+    checkOption.Email = req.body.cEmail
+    checkOption.Type = req.body.cType
+    checkOption.Role = req.body.cRole
+
+    res.redirect('/users')
+  });
 
   return router;
 }
