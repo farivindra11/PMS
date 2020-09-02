@@ -179,10 +179,10 @@
                             <td <%= option.Type ? `` : `hidden` %>><%=item.typejob%></td>
                             <td <%= option.Role ? `` : `hidden` %>><%=item.role%></td>
                             <td>
-                                <a href="#">
+                                <a href="/users/edit/<%=item.userid%>">
                                     <button type="button" class="btn btn-outline-success">Edit</button>
                                 </a>
-                                <a href="#">
+                                <a href="/users/delete/<%=item.userid%>">
                                     <button type="button" class="btn btn-outline-danger"
                                         onclick="javascript: return confirm('Yakin data akan dihapus?')">Delete</button>
                                 </a>
@@ -217,8 +217,5 @@
 </div>
 </div>
 <!-- end table -->
-
-
-
 
 <%- include('../partials/footer')%>
