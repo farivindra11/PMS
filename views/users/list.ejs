@@ -1,4 +1,224 @@
 <%- include('../partials/header')%>
+<div class="container">
+    <h1 class="card-title">Users Dashboard</h1>
+    <hr>
+    <!-- filters -->
+    <h3 class="card-title">Filters</h3>
+    <div class="col-md-12">
+        <form method="get" id="filterForm">
+            <input type="hidden" name="page" value="1">
+            <div class="form-group row">
+                <label for="id" class="col-sm-2 col-form-label">
+                    <input class="form-check-input" name="checkId" type="checkbox" id="id">
+                    ID
+                </label>
+                <div class="col-sm-10">
+                    <input type="number" name="id" class="form-control" id="id" placeholder="ID">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">
+                    <input class="form-check-input" name="checkName" type="checkbox" id="name">
+                    Name
+                </label>
+                <div class="col-sm-10">
+                    <input type="text" name="name" class="form-control" id="name" placeholder="Name">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="email" class="col-sm-2 col-form-label">
+                    <input class="form-check-input" name="checkEmail" type="checkbox" id="email">
+                    Email
+                </label>
+                <div class="col-sm-10">
+                    <input type="email" name="email" class="form-control" id="email" placeholder="Email">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="position" class="col-sm-2 col-form-label">
+                    <input class="form-check-input" name="checkPosition" type="checkbox" id="position">
+                    Position
+                </label>
+                <div class="col-sm-10">
+                    <select id="position" class="custom-select custom-select" name="position">
+                        <option selected disabled>Choose the position ...</option>
+                        <option value="Manager">Manager</option>
+                        <option value="Quality Assurance">Quality Assurance</option>
+                        <option value="Software Developer">Software Developer</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="form-group row">
+                <label for="typejob" class="col-sm-2 col-form-label">
+                    <input class="form-check-input" name="checkType" type="checkbox" id="typejob">
+                    Type Job
+                </label>
+                <div class="col-sm-10">
+                    <div class="form-check">
+                        <input id="fulltime" type="radio" name="type" class="form-check-input" value="FullTime">
+                        <label for="fulltime" class="form-check-label">
+                            Full Time
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input id="parttime" type="radio" name="type" class="form-check-input" value="Parttime">
+                        <label for="parttime" class="form-check-label">
+                            Part Time
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-outline-dark">Search</button>
+
+                    <a href="/users">
+                        <button type="submit" class="btn btn-outline-dark">reset</button>
+                    </a>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+<!-- end filter -->
+<!-- option -->
+<div class="container">
+    <form action="" method="POST">
+        <div class="form-group row" style="padding: 20px;">
+            <h2 class="col-sm-4" style="font-family:avro">Option
+                Columns</h2>
+            <div class="col-sm-2" style="margin-top: 10px;">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="cId" name="cId" value="true"
+                        <%= option.Id ? `checked` : `` %>>
+                    <label class="form-check-label" for="cId">
+                        ID
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="cName" name="cName" value="true"
+                        <%= option.Name ? `checked` : `` %>>
+                    <label class="form-check-label" for="cName">
+                        Name
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-sm-2" style="margin-top: 10px;">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="cPosition" name="cPosition" value="true"
+                        <%= option.Position ? `checked` : `` %>>
+                    <label class="form-check-label" for="cPosition">
+                        Position
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="cEmail" name="cEmail" value="true"
+                        <%= option.Email ? `checked` : `` %>>
+                    <label class="form-check-label" for="cEmail">
+                        Email
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-sm-2" style="margin-top: 10px;">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="cType" name="cType" value="true"
+                        <%= option.Type ? `checked` : `` %>>
+                    <label class="form-check-label" for="cType">
+                        Type Job
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="cRole" name="cRole" value="true"
+                        <%= option.Role ? `checked` : `` %>>
+                    <label class="form-check-label" for="cRole">
+                        Role
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-sm-2" style="margin-top: 10px;">
+                <div class="col-sm-2">
+                    <button class="btn btn-dark btn-sm" type="submit">Apply</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- end option -->
+    <!-- table -->
+    <div class="card2">
+        <div class="card-body tb">
+            <div class="table">
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th <%= option.Id ? `` : `hidden` %>>User ID</th>
+                            <th <%= option.Email ? `` : `hidden` %>>Email</th>
+                            <th <%= option.Name ? `` : `hidden` %>>Name</th>
+                            <th <%= option.Position ? `` : `hidden` %>>Position</th>
+                            <th <%= option.Type ? `` : `hidden` %>>Type Job</th>
+                            <th <%= option.Role ? `` : `hidden` %>>Role</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%users.forEach(item =>{%>
+                        <tr>
+                            <td <%= option.Id ? `` : `hidden` %>><%=item.userid%></td>
+                            <td <%= option.Email ? `` : `hidden` %>><%=item.email%></td>
+                            <td <%= option.Name ? `` : `hidden` %>><%=item.fullname%></td>
+                            <td <%= option.Position ? `` : `hidden` %>><%=item.position%></td>
+                            <td <%= option.Type ? `` : `hidden` %>><%=item.typejob%></td>
+                            <td <%= option.Role ? `` : `hidden` %>><%=item.role%></td>
+                            <td>
+                                <a href="#">
+                                    <button type="button" class="btn btn-outline-success">Edit</button>
+                                </a>
+                                <a href="#">
+                                    <button type="button" class="btn btn-outline-danger"
+                                        onclick="javascript: return confirm('Yakin data akan dihapus?')">Delete</button>
+                                </a>
+                            </td>
+                        </tr>
+                        <%})%>
+                    </tbody>
+                </table>
+            </div>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item <%= page==1 ? 'disabled' : ''%>">
+                        <a class="page-link"
+                            href="/users<%= url.replace(`?page=${parseInt(page)}`,`?page=${ parseInt(page) - 1}`)%>">Previous</a>
+                    </li>
+                    <%for(let i = 1; i <= pages; i++){%>
+                    <li class="page-item <%= i == page ? 'active' : ''%>">
+                        <a class="page-link"
+                            href="/users<%= url.replace( `?page=${parseInt(page)}`,`?page=${i}`)%>"><%= i%></a>
+                    </li>
+                    <%}%>
+                    <li class="page-item <%= page==pages ? 'disabled' : ''%>"><a class="page-link disabled"
+                        href="/users<%= url.replace( `?page=${parseInt(page)}`,`?page=${ parseInt(page) + 1}`)%>">Next</a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="add">
+                <a class="btn btn-outline-primary" href="/users/add">Add User</a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- end table -->
+
+
 
 
 <%- include('../partials/footer')%>
