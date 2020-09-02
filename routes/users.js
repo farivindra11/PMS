@@ -115,5 +115,17 @@ module.exports = (db) => {
     });
   });
 
+  /////////// DELETE /////////////
+  router.get('/delete/:id', helpers.isLoggedIn, function (req, res) {
+    let id = req.params.id
+    let sql = `DELETE FROM users WHERE userid=$1`
+
+    db.query(sql, [id], (err) => {
+      if (err) return res.send(err)
+
+      res.redirect('/users')
+    })
+  })
+
   return router;
 }
