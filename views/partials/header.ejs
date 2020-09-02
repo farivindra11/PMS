@@ -163,7 +163,7 @@
                         <a class="nav-link" href="/profile">Profile</a>
                     </li>
                     <li class="nav-item <%= link == 'users' ? 'active' : '' %>">
-                        <a class="nav-link <%=user.role == 'User' ? 'disabled' : ''%>" href="/users"><strong>Users</strong></a>
+                        <a class="nav-link" <%=user.role == 'User' ? 'hidden' : ''%> href="/users">Users</a>
                     </li>
                 </ul>
                 <span class="navbar-text">
