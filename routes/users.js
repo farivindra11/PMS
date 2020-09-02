@@ -77,14 +77,42 @@ module.exports = (db) => {
     })
   });
   router.post('/', helpers.isLoggedIn, function (req, res) {
-    checkOption.Id = req.body.cId
-    checkOption.Name = req.body.cName
-    checkOption.Position = req.body.cPosition
-    checkOption.Email = req.body.cEmail
-    checkOption.Type = req.body.cType
-    checkOption.Role = req.body.cRole
+    checkOptions.Id = req.body.cId
+    checkOptions.Name = req.body.cName
+    checkOptions.Position = req.body.cPosition
+    checkOptions.Email = req.body.cEmail
+    checkOptions.Type = req.body.cType
+    checkOptions.Role = req.body.cRole
 
     res.redirect('/users')
+  });
+
+  //////////// ADD ///////////
+  router.get('/add', helpers.isLoggedIn, (req, res) => {
+    const link = 'users';
+    res.render('users/add', {
+      link,
+      user: req.session.user
+    })
+  })
+
+  router.post('/add', helpers.isLoggedIn, function (req, res, next) {
+    const { firstName, lastName, email, password, position, type, role } = req.body
+
+
+    bcrypt.hash(password, saltRounds, function (err, hash) {
+      // Store hash in your password DB.
+      if (err) return res.send(err)
+
+      let sql = 'INSERT INTO users(firstname, lastname, email, password, position, typejob, role) VALUES ($1, $2, $3, $4, $5, $6, $7)'
+      let values = [firstName, lastName, email, hash, position, type, role]
+      db.query(sql, values, (err) => {
+        // console.log(values)
+        if (err) return res.send(err)
+
+        res.redirect('/users')
+      })
+    });
   });
 
   return router;
