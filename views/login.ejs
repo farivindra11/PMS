@@ -11,12 +11,12 @@
   <title>Login</title>
 
   <!-- Bootstrap core CSS -->
-  <link href="/stylesheets/bootstrap.css" rel="stylesheet" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <link href="/stylesheets/bootstrap.css" rel="stylesheet"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
   <!-- Favicons -->
-  <link rel="icon"
-    href="https://cdn.pixabay.com/photo/2017/01/31/23/42/animal-2028258_960_720.png"
-    sizes="16x16" type="image/png">
+  <link rel="icon" href="https://cdn.pixabay.com/photo/2017/01/31/23/42/animal-2028258_960_720.png" sizes="16x16"
+    type="image/png">
   <!-- <link rel="apple-touch-icon" href="https://getbootstrap.com/docs/4.5/assets/img/favicons/apple-touch-icon.png" sizes="180x180"> -->
   <!-- <link rel="icon" href="https://getbootstrap.com/docs/4.5/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png"> -->
   <!-- <link rel="manifest" href="https://getbootstrap.com/docs/4.5/assets/img/favicons/manifest.json"> -->
@@ -36,7 +36,8 @@
       -ms-user-select: none;
       user-select: none;
     }
-    .alert-light{
+
+    .alert-light {
       /* background-color: rgba(0,0,0,0); */
       font-family: Arial, Helvetica, sans-serif;
       color: red;
@@ -47,6 +48,12 @@
         font-size: 3.5rem;
       }
     }
+
+    /* modal */
+    .getakses {
+      text-align: center;
+      margin-top: 20px;
+    }
   </style>
   <!-- Custom styles for this template -->
   <link href="/stylesheets/floating-labels.css" rel="stylesheet">
@@ -54,40 +61,83 @@
 
 <body>
   <div class="container">
-  <form class="form-signin" action="/login" method="POST">
-    <div class="text-center mb-4">
-      <img class="mb-4" src="/images/animal.svg" alt="" width="80" height="80">
-      <h1 class="h3 mb-3 font-weight-normal" style="color: aliceblue;">Project Management <br> System</h1>
-    </div>
+    <form class="form-signin" action="/login" method="POST">
+      <div class="text-center mb-4">
+        <img class="mb-4" src="/images/animal.svg" alt="" width="80" height="80">
+        <h1 class="h3 mb-3 font-weight-normal" style="color: aliceblue;">Project Management <br> System</h1>
+      </div>
 
-    <% if(loginInfo.length > 0) {%>
-    <div class="alert alert-light" role="alert">
-      <%= loginInfo %>
-    </div>
-    <% }%>
+      <% if(loginInfo.length > 0) {%>
+      <div class="alert alert-light" role="alert">
+        <%= loginInfo %>
+      </div>
+      <% }%>
 
-    <div class="form-label-group" style="color: white!important;">
-      <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus=""
-        name="email">
-      <label for="inputEmail">Email address</label>
-    </div>
+      <div class="form-label-group" style="color: white!important;">
+        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus=""
+          name="email">
+        <label for="inputEmail">Email address</label>
+      </div>
 
-    <div class="form-label-group">
-      <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="" name="password">
-      <label for="inputPassword">Password</label>
-    </div>
+      <div class="form-label-group">
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required=""
+          name="password">
+        <label for="inputPassword">Password</label>
+      </div>
 
-    <div class="checkbox mb-3">
-      <label style="color: white;">
-        <input type="checkbox" value="remember-me"> Remember me
-      </label>
-    </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit" style="background-color: rgba(0,0,0.,1);">Sign
-      in</button>
-    <h6 class="mt-5 mb-3 text-muted text-center" style="color: white!important;">© FarivIND - 2020 - All rights
-      reserved.</h6>
-  </form>
-</div>
+      <div class="checkbox mb-3">
+        <label style="color: white;">
+          <input type="checkbox" value="remember-me"> Remember me
+        </label>
+      </div>
+      <button class="btn btn-lg btn-primary btn-block" type="submit" style="background-color: rgba(0,0,0.,1);">Sign
+        in</button>
+
+      <div class="getakses">
+        <a data-toggle="modal" class="btn btn-info" data-target="#staticBackdrop">Get Access </a>
+      </div>
+
+      <!-- modal -->
+      <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header bg-dark">
+              <h5 class="modal-title text-white" id="staticBackdropLabel">Access account</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <strong>Admin</strong>
+              <p style="font-family: avro;">email address : admin@gmail.com</p>
+              <p style="font-family: avro; margin-top: -15px;">password : 4321</p>
+              <hr>
+              <strong>User</strong>
+              <p style="font-family: avro;">email address : user@gmail.com</p>
+              <p style="font-family: avro; margin-top: -15px;">password : 1234</p>
+            </div>
+            <div class="modal-footer bg-dark">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h6 class="mt-5 mb-3 text-muted text-center" style="color: white!important;">© FarivIND - 2020 - All rights
+        reserved.</h6>
+    </form>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+    integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+    crossorigin="anonymous"></script>
+
 </body>
 
 </html>
