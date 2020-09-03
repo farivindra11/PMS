@@ -245,19 +245,23 @@ module.exports = (db) => {
   // delete
   router.get('/delete/:projectid', helpers.isLoggedIn, function (req, res, next) {
     const id = parseInt(req.params.projectid)
-    let membersData = `DELETE FROM members WHERE projectid =${id}`;
 
+    let membersData = `DELETE FROM members WHERE projectid =${id}`;
     db.query(membersData, (err) => {
       if (err) return res.send(err)
 
-      let projectsData = `DELETE FROM projects WHERE projectid = ${id}`;
-      db.query(projectsData, (err) => {
-        if (err) return res.send(err)
+      let issueData = `Delete FROM issues WHERE projectid = ${id}`
+      db.query(issueData, (err) => {
+        if (err) res.send(err)
 
-        res.redirect('/projects')
+        let projectsData = `DELETE FROM projects WHERE projectid = ${id}`;
+        db.query(projectsData, (err) => {
+          if (err) return res.send(err)
+
+          res.redirect('/projects')
+        })
       })
     })
-
   });
   // end main project
 
