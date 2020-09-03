@@ -115,6 +115,46 @@ module.exports = (db) => {
     });
   });
 
+  ///////////// EDIT /////////////
+  router.get('/edit/:id', helpers.isLoggedIn, (req, res) => {
+    let link = 'users'
+    let id = req.params.id
+    let sql = `SELECT * FROM users WHERE userid = ${id}`
+    db.query(sql, (err, data) => {
+      // console.log(data);
+      if (err) return res.send(err)
+
+      res.render('users/edit', {
+        link,
+        data: data.rows[0],
+        user: req.session.user
+      })
+    })
+  })
+
+  router.post('/edit/:id', helpers.isLoggedIn, function (req, res) {
+    let userid = req.params.id
+    const { firstName, lastName, password, position, type, role } = req.body
+
+    bcrypt.hash(password, saltRounds, function (err, hash) {
+      if (err) return res.status(500).json({
+        error: true,
+        message: err
+      })
+
+      let sqlUpdate = `UPDATE users SET firstname=$1, lastname=$2, password=$3, position=$4, typejob=$5, role=$6 WHERE userid=$7`
+      let value = [firstName, lastName, hash, position, type, role, userid]
+
+      db.query(sqlUpdate, value, (err) => {
+        if (err) return res.status(500).json({
+          error: true,
+          message: err
+        })
+        res.redirect('/users')
+      })
+    });
+  })
+
   /////////// DELETE /////////////
   router.get('/delete/:id', helpers.isLoggedIn, function (req, res) {
     let id = req.params.id
