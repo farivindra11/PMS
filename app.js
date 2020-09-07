@@ -9,14 +9,21 @@ var flash = require('connect-flash');
 var fileUpload = require('express-fileupload');
 
 const { Pool } = require('pg')
+// const pool = new Pool({
+//   user: 'fariv',
+//   host: 'localhost',
+//   database: 'pmsdb',
+//   password: 'fariv11',
+//   port: 5432,
+// })
+
 const pool = new Pool({
-  user: 'fariv',
-  host: 'localhost',
-  database: 'pmsdb',
-  password: 'fariv11',
+  user: 'erriheilajnjla',
+  host: 'ec2-54-204-26-236.compute-1.amazonaws.com',
+  database: 'de2moo97oilu9a',
+  password: 'b4bf0a781fb3847bcaef94690ded2dde90b72dbbe2ad901326fc903338693e38',
   port: 5432,
 })
-
 
 var indexRouter = require('./routes/index')(pool);
 var projectsRouter = require('./routes/projects')(pool); //projects
