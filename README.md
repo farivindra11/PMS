@@ -12,7 +12,7 @@ Stack technologies :
     NPM (others package)
     Bootstrap 4.0 (View)
     
-Check it out
+Check it out https://farivpms.herokuapp.com
 
 screenshoot of project:
 
